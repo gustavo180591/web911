@@ -1,0 +1,98 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Registro de Usuario{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Crea una cuenta</h2>
+    <p class="text-center text-muted mb-4">Es rápido y fácil.</p>
+
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger">{{ message }}</div>
+    {% endfor %}
+
+    <form action="{{ path('process_registration') }}" method="POST" enctype="multipart/form-data">
+        <div class="row">
+            <!-- Nombre -->
+            <div class="col-md-6 mb-3">
+                <input type="text" name="nombre" class="form-control" placeholder="Nombre" required>
+            </div>
+            <!-- Apellido -->
+            <div class="col-md-6 mb-3">
+                <input type="text" name="apellido" class="form-control" placeholder="Apellido" required>
+            </div>
+        </div>
+
+        <!-- Fecha de Nacimiento -->
+        <div class="mb-3">
+            <label for="birthdate">Fecha de nacimiento</label>
+            <div class="d-flex gap-2">
+                <select name="dia" class="form-control" required>
+                    {% for i in 1..31 %}
+                        <option value="{{ i }}">{{ i }}</option>
+                    {% endfor %}
+                </select>
+                <select name="mes" class="form-control" required>
+                    {% for mes in ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'] %}
+                        <option value="{{ mes }}">{{ mes }}</option>
+                    {% endfor %}
+                </select>
+                <select name="anio" class="form-control" required>
+                    {% for i in 1900..now|date('Y') %}
+                        <option value="{{ i }}">{{ i }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <!-- Género -->
+        <div class="mb-3">
+            <label for="gender">Género</label>
+            <div class="d-flex justify-content-around">
+                <label><input type="radio" name="genero" value="Mujer" required> Mujer</label>
+                <label><input type="radio" name="genero" value="Hombre" required> Hombre</label>
+                <label><input type="radio" name="genero" value="Personalizado" required> Personalizado</label>
+            </div>
+        </div>
+
+        <!-- Email y Teléfono -->
+        <div class="mb-3">
+            <input type="email" name="email" class="form-control" placeholder="Correo electrónico" required>
+        </div>
+        <div class="mb-3">
+            <input type="text" name="telefono" class="form-control" placeholder="Teléfono" required>
+        </div>
+
+        <!-- DNI -->
+        <div class="mb-3">
+            <input type="text" name="dni" class="form-control" placeholder="DNI" required>
+        </div>
+        <div class="mb-3">
+            <label for="dni_front">Foto del DNI (frente)</label>
+            <input type="file" name="dni_front" class="form-control" accept="image/*" required>
+        </div>
+        <div class="mb-3">
+            <label for="dni_back">Foto del DNI (dorso)</label>
+            <input type="file" name="dni_back" class="form-control" accept="image/*" required>
+        </div>
+
+        <!-- Dirección -->
+        <div class="mb-3">
+            <input type="text" name="calle" class="form-control" placeholder="Calle" required>
+        </div>
+        <div class="mb-3">
+            <input type="text" name="numero" class="form-control" placeholder="Número" required>
+        </div>
+        <div class="mb-3">
+            <input type="text" name="detalles" class="form-control" placeholder="Detalles de la ubicación (opcional)">
+        </div>
+
+        <!-- Contraseña -->
+        <div class="mb-3">
+            <input type="password" name="password" class="form-control" placeholder="Contraseña nueva" required>
+        </div>
+
+        <button type="submit" class="btn btn-success w-100">Registrarte</button>
+    </form>
+</div>
+{% endblock %}
