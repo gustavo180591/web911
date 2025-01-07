@@ -17,9 +17,10 @@ class RegistrationController extends AbstractController
     public function register(): Response
     {
         // Renderiza el formulario de registro
-        return $this->render('registration/register.html.twig');
+        return $this->render('registration/register.html.twig', [
+            'currentYear' => (int) (new \DateTime())->format('Y'), // Pasamos el año actual como entero
+        ]);
     }
-
     #[Route('/register/process', name: 'process_registration', methods: ['POST'])]
     public function processRegistration(
         Request $request,

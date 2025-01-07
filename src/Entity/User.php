@@ -56,6 +56,15 @@ class User
     #[ORM\Column]
     private ?bool $locationValidated = null;
 
+    #[ORM\Column]
+    private ?\DateTimeImmutable $setCreatedAt = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column]
+    private ?bool $setIsActive = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -225,6 +234,42 @@ class User
     public function setLocationValidated(bool $locationValidated): static
     {
         $this->locationValidated = $locationValidated;
+
+        return $this;
+    }
+
+    public function getSetCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->setCreatedAt;
+    }
+
+    public function setSetCreatedAt(\DateTimeImmutable $setCreatedAt): static
+    {
+        $this->setCreatedAt = $setCreatedAt;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function isSetIsActive(): ?bool
+    {
+        return $this->setIsActive;
+    }
+
+    public function setSetIsActive(bool $setIsActive): static
+    {
+        $this->setIsActive = $setIsActive;
 
         return $this;
     }

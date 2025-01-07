@@ -3,9 +3,9 @@
 {% block title %}Registro Exitoso{% endblock %}
 
 {% block body %}
-<div class="container mt-5 text-center">
-    <h2 class="mb-4 text-success">¡Registro exitoso!</h2>
+<div class="container text-center mt-5">
+    <h2 class="text-success">¡Registro exitoso!</h2>
     <p>Tu cuenta ha sido creada correctamente.</p>
-    <p><a href="{{ path('user_login') }}" class="btn btn-primary">Iniciar Sesión</a></p>
+    <a href="{{ path('user_login') }}" class="btn btn-primary mt-3">Iniciar Sesión</a>
 </div>
 {% endblock %}
