@@ -56,7 +56,7 @@ class RegistrationController extends AbstractController
         $user->setStreetNumber($streetNumber);
         $user->setLocationDetails($locationDetails);
         $user->setPassword(password_hash($password, PASSWORD_BCRYPT)); // Encripta la contraseña
-        $user->setCreatedAt(new \DateTime());
+        $user->setCreatedAt(new \DateTimeImmutable());
         $user->setIsActive(true);
 
         // Guardar las fotos del DNI

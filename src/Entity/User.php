@@ -26,7 +26,7 @@ class User
     #[ORM\Column(length: 255)]
     private ?string $gender = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
@@ -35,13 +35,13 @@ class User
     #[ORM\Column(length: 255)]
     private ?string $phone = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $dni = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $dniFrontPhoto = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $dniBackPhoto = null;
 
     #[ORM\Column(length: 255)]
@@ -50,20 +50,17 @@ class User
     #[ORM\Column(length: 255)]
     private ?string $streetNumber = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $locationDetails = null;
 
     #[ORM\Column]
     private ?bool $locationValidated = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $setCreatedAt = null;
-
-    #[ORM\Column]
+    #[ORM\Column(type: 'datetime_immutable')]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column]
-    private ?bool $setIsActive = null;
+    #[ORM\Column(type: 'boolean', options: ['default' => true])]
+    private ?bool $isActive = true;
 
     public function getId(): ?int
     {
@@ -171,7 +168,7 @@ class User
         return $this->dniFrontPhoto;
     }
 
-    public function setDniFrontPhoto(string $dniFrontPhoto): static
+    public function setDniFrontPhoto(?string $dniFrontPhoto): static
     {
         $this->dniFrontPhoto = $dniFrontPhoto;
 
@@ -183,7 +180,7 @@ class User
         return $this->dniBackPhoto;
     }
 
-    public function setDniBackPhoto(string $dniBackPhoto): static
+    public function setDniBackPhoto(?string $dniBackPhoto): static
     {
         $this->dniBackPhoto = $dniBackPhoto;
 
@@ -219,7 +216,7 @@ class User
         return $this->locationDetails;
     }
 
-    public function setLocationDetails(string $locationDetails): static
+    public function setLocationDetails(?string $locationDetails): static
     {
         $this->locationDetails = $locationDetails;
 
@@ -238,18 +235,6 @@ class User
         return $this;
     }
 
-    public function getSetCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->setCreatedAt;
-    }
-
-    public function setSetCreatedAt(\DateTimeImmutable $setCreatedAt): static
-    {
-        $this->setCreatedAt = $setCreatedAt;
-
-        return $this;
-    }
-
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
@@ -262,14 +247,14 @@ class User
         return $this;
     }
 
-    public function isSetIsActive(): ?bool
+    public function getIsActive(): ?bool
     {
-        return $this->setIsActive;
+        return $this->isActive;
     }
 
-    public function setSetIsActive(bool $setIsActive): static
+    public function setIsActive(bool $isActive): static
     {
-        $this->setIsActive = $setIsActive;
+        $this->isActive = $isActive;
 
         return $this;
     }
