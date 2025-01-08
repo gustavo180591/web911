@@ -5,27 +5,35 @@
 {% block body %}
 <div class="container mt-5">
     <h2 class="text-center mb-4">Crea una cuenta</h2>
-    <p class="text-center text-muted mb-4">Es rápido y fácil.</p>
 
     {% for message in app.flashes('error') %}
         <div class="alert alert-danger">{{ message }}</div>
     {% endfor %}
 
     <form action="{{ path('process_registration') }}" method="POST" enctype="multipart/form-data">
-        <div class="row">
-            <!-- Nombre -->
-            <div class="col-md-6 mb-3">
-                <input type="text" name="nombre" class="form-control" placeholder="Nombre" required>
-            </div>
-            <!-- Apellido -->
-            <div class="col-md-6 mb-3">
-                <input type="text" name="apellido" class="form-control" placeholder="Apellido" required>
-            </div>
-        </div>
-
-        <!-- Fecha de Nacimiento -->
+        <!-- Nombre -->
         <div class="mb-3">
-            <label for="birthdate">Fecha de nacimiento</label>
+            <input type="text" name="nombre" class="form-control" placeholder="Nombre" required>
+        </div>
+        <!-- Apellido -->
+        <div class="mb-3">
+            <input type="text" name="apellido" class="form-control" placeholder="Apellido" required>
+        </div>
+<!-- DNI -->
+        <div class="mb-3">
+            <input type="text" name="dni" class="form-control" placeholder="DNI" required>
+        </div>
+        <div class="mb-3">
+            <label>Foto del DNI (frente)</label>
+            <input type="file" name="dni_front" class="form-control" accept="image/*" required>
+        </div>
+        <div class="mb-3">
+            <label>Foto del DNI (dorso)</label>
+            <input type="file" name="dni_back" class="form-control" accept="image/*" required>
+        </div>
+        <!-- Fecha de nacimiento -->
+        <div class="mb-3">
+            <label>Fecha de nacimiento</label>
             <div class="d-flex gap-2">
                 <select name="dia" class="form-control" required>
                     {% for i in 1..31 %}
@@ -33,8 +41,8 @@
                     {% endfor %}
                 </select>
                 <select name="mes" class="form-control" required>
-                    {% for mes in ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'] %}
-                        <option value="{{ mes }}">{{ mes }}</option>
+                    {% for i in 1..12 %}
+                        <option value="{{ i }}">{{ ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'][i - 1] }}</option>
                     {% endfor %}
                 </select>
                 <select name="anio" class="form-control" required>
@@ -47,52 +55,94 @@
 
         <!-- Género -->
         <div class="mb-3">
-            <label for="gender">Género</label>
-            <div class="d-flex justify-content-around">
+            <label>Género</label>
+            <div class="d-flex gap-2">
                 <label><input type="radio" name="genero" value="Mujer" required> Mujer</label>
                 <label><input type="radio" name="genero" value="Hombre" required> Hombre</label>
                 <label><input type="radio" name="genero" value="Personalizado" required> Personalizado</label>
             </div>
         </div>
 
-        <!-- Email y Teléfono -->
+        <!-- Email -->
         <div class="mb-3">
             <input type="email" name="email" class="form-control" placeholder="Correo electrónico" required>
         </div>
+
+        <!-- Teléfono -->
         <div class="mb-3">
             <input type="text" name="telefono" class="form-control" placeholder="Teléfono" required>
         </div>
 
-        <!-- DNI -->
-        <div class="mb-3">
-            <input type="text" name="dni" class="form-control" placeholder="DNI" required>
-        </div>
-        <div class="mb-3">
-            <label for="dni_front">Foto del DNI (frente)</label>
-            <input type="file" name="dni_front" class="form-control" accept="image/*" required>
-        </div>
-        <div class="mb-3">
-            <label for="dni_back">Foto del DNI (dorso)</label>
-            <input type="file" name="dni_back" class="form-control" accept="image/*" required>
+        <!-- Dirección -->
+        <div class="input-group mb-3">
+            <input type="text" id="direccion" class="form-control" placeholder="Buscar dirección">
+            <button class="btn btn-primary" id="buscarDireccion" type="button">Buscar</button>
         </div>
 
-        <!-- Dirección -->
-        <div class="mb-3">
-            <input type="text" name="calle" class="form-control" placeholder="Calle" required>
+        <!-- Mapa en una card -->
+        <div class="card mb-3" style="height: 300px;">
+            <div id="map" style="height: 100%;"></div>
         </div>
-        <div class="mb-3">
-            <input type="text" name="numero" class="form-control" placeholder="Número" required>
-        </div>
-        <div class="mb-3">
-            <input type="text" name="detalles" class="form-control" placeholder="Detalles de la ubicación (opcional)">
-        </div>
+
+        <!-- Coordenadas y calle (campos ocultos) -->
+        <input type="hidden" name="street" id="street">
+        <input type="hidden" name="latitude" id="latitude">
+        <input type="hidden" name="longitude" id="longitude">
 
         <!-- Contraseña -->
         <div class="mb-3">
             <input type="password" name="password" class="form-control" placeholder="Contraseña nueva" required>
         </div>
 
+        <!-- Botón de envío -->
         <button type="submit" class="btn btn-success w-100">Registrarte</button>
     </form>
 </div>
+
+<script>
+    var map = L.map('map').setView([-34.603722, -58.381592], 13); // Buenos Aires por defecto
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    var marker = L.marker([-34.603722, -58.381592], { draggable: true }).addTo(map);
+
+    marker.on('dragend', function () {
+        var position = marker.getLatLng();
+        document.getElementById('latitude').value = position.lat;
+        document.getElementById('longitude').value = position.lng;
+
+        // Actualizar dirección al mover marcador
+        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.lat}&lon=${position.lng}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.display_name) {
+                    document.getElementById('street').value = data.display_name;
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    });
+
+    document.getElementById('buscarDireccion').addEventListener('click', function () {
+        var address = document.getElementById('direccion').value;
+        if (address) {
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.length > 0) {
+                        var lat = data[0].lat;
+                        var lon = data[0].lon;
+                        map.setView([lat, lon], 15);
+                        marker.setLatLng([lat, lon]);
+                        document.getElementById('latitude').value = lat;
+                        document.getElementById('longitude').value = lon;
+                        document.getElementById('street').value = data[0].display_name;
+                    } else {
+                        alert('La dirección no pudo ser localizada.');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    });
+</script>
 {% endblock %}

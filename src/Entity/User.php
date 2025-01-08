@@ -53,8 +53,14 @@ class User
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $locationDetails = null;
 
-    #[ORM\Column]
-    private ?bool $locationValidated = null;
+    #[ORM\Column(type: 'float', nullable: true)]
+    private ?float $latitude = null;
+
+    #[ORM\Column(type: 'float', nullable: true)]
+    private ?float $longitude = null;
+
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private ?bool $locationValidated = false;
 
     #[ORM\Column(type: 'datetime_immutable')]
     private ?\DateTimeImmutable $createdAt = null;
@@ -75,7 +81,6 @@ class User
     public function setFirstName(string $firstName): static
     {
         $this->firstName = $firstName;
-
         return $this;
     }
 
@@ -87,7 +92,6 @@ class User
     public function setLastName(string $lastName): static
     {
         $this->lastName = $lastName;
-
         return $this;
     }
 
@@ -99,7 +103,6 @@ class User
     public function setBirthDate(\DateTimeInterface $birthDate): static
     {
         $this->birthDate = $birthDate;
-
         return $this;
     }
 
@@ -111,7 +114,6 @@ class User
     public function setGender(string $gender): static
     {
         $this->gender = $gender;
-
         return $this;
     }
 
@@ -123,7 +125,6 @@ class User
     public function setEmail(string $email): static
     {
         $this->email = $email;
-
         return $this;
     }
 
@@ -135,7 +136,6 @@ class User
     public function setPassword(string $password): static
     {
         $this->password = $password;
-
         return $this;
     }
 
@@ -147,7 +147,6 @@ class User
     public function setPhone(string $phone): static
     {
         $this->phone = $phone;
-
         return $this;
     }
 
@@ -159,7 +158,6 @@ class User
     public function setDni(string $dni): static
     {
         $this->dni = $dni;
-
         return $this;
     }
 
@@ -171,7 +169,6 @@ class User
     public function setDniFrontPhoto(?string $dniFrontPhoto): static
     {
         $this->dniFrontPhoto = $dniFrontPhoto;
-
         return $this;
     }
 
@@ -183,7 +180,6 @@ class User
     public function setDniBackPhoto(?string $dniBackPhoto): static
     {
         $this->dniBackPhoto = $dniBackPhoto;
-
         return $this;
     }
 
@@ -195,7 +191,6 @@ class User
     public function setStreet(string $street): static
     {
         $this->street = $street;
-
         return $this;
     }
 
@@ -207,7 +202,6 @@ class User
     public function setStreetNumber(string $streetNumber): static
     {
         $this->streetNumber = $streetNumber;
-
         return $this;
     }
 
@@ -219,7 +213,28 @@ class User
     public function setLocationDetails(?string $locationDetails): static
     {
         $this->locationDetails = $locationDetails;
+        return $this;
+    }
 
+    public function getLatitude(): ?float
+    {
+        return $this->latitude;
+    }
+
+    public function setLatitude(?float $latitude): static
+    {
+        $this->latitude = $latitude;
+        return $this;
+    }
+
+    public function getLongitude(): ?float
+    {
+        return $this->longitude;
+    }
+
+    public function setLongitude(?float $longitude): static
+    {
+        $this->longitude = $longitude;
         return $this;
     }
 
@@ -231,7 +246,6 @@ class User
     public function setLocationValidated(bool $locationValidated): static
     {
         $this->locationValidated = $locationValidated;
-
         return $this;
     }
 
@@ -243,7 +257,6 @@ class User
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
-
         return $this;
     }
 
@@ -255,7 +268,6 @@ class User
     public function setIsActive(bool $isActive): static
     {
         $this->isActive = $isActive;
-
         return $this;
     }
 }

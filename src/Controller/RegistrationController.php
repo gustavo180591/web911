@@ -16,11 +16,12 @@ class RegistrationController extends AbstractController
     #[Route('/register', name: 'user_register', methods: ['GET'])]
     public function register(): Response
     {
-        // Renderiza el formulario de registro
+        // Renderiza el formulario de registro y pasa el año actual
         return $this->render('registration/register.html.twig', [
-            'currentYear' => (int) (new \DateTime())->format('Y'), // Pasamos el año actual como entero
+            'currentYear' => (int)(new \DateTime())->format('Y'),
         ]);
     }
+
     #[Route('/register/process', name: 'process_registration', methods: ['POST'])]
     public function processRegistration(
         Request $request,
@@ -30,15 +31,30 @@ class RegistrationController extends AbstractController
         // Captura los datos del formulario
         $firstName = $request->request->get('nombre');
         $lastName = $request->request->get('apellido');
-        $birthDate = $request->request->get('anio') . '-' . $request->request->get('mes') . '-' . $request->request->get('dia');
+        $dia = $request->request->get('dia');
+        $mes = $request->request->get('mes');
+        $anio = $request->request->get('anio');
         $gender = $request->request->get('genero');
         $email = $request->request->get('email');
         $password = $request->request->get('password');
         $phone = $request->request->get('telefono');
         $dni = $request->request->get('dni');
-        $street = $request->request->get('calle');
-        $streetNumber = $request->request->get('numero');
-        $locationDetails = $request->request->get('detalles');
+        $street = $request->request->get('street', '');
+        $latitude = $request->request->get('latitude', '');
+        $longitude = $request->request->get('longitude', '');
+
+        // Validar y construir la fecha de nacimiento
+        if (!checkdate((int)$mes, (int)$dia, (int)$anio)) {
+            $this->addFlash('error', 'La fecha de nacimiento no es válida.');
+            return $this->redirectToRoute('user_register');
+        }
+        $birthDate = new \DateTimeImmutable(sprintf('%04d-%02d-%02d', $anio, $mes, $dia));
+
+        // Validar que la dirección no esté vacía
+        if (empty($street)) {
+            $this->addFlash('error', 'La dirección es obligatoria.');
+            return $this->redirectToRoute('user_register');
+        }
 
         // Procesar las fotos del DNI (frente y dorso)
         $dniFrontFile = $request->files->get('dni_front');
@@ -47,37 +63,31 @@ class RegistrationController extends AbstractController
         $user = new User();
         $user->setFirstName($firstName);
         $user->setLastName($lastName);
-        $user->setBirthDate(new \DateTime($birthDate));
+        $user->setBirthDate($birthDate);
         $user->setGender($gender);
         $user->setEmail($email);
+        $user->setPassword(password_hash($password, PASSWORD_BCRYPT)); // Encripta la contraseña
         $user->setPhone($phone);
         $user->setDni($dni);
         $user->setStreet($street);
-        $user->setStreetNumber($streetNumber);
-        $user->setLocationDetails($locationDetails);
-        $user->setPassword(password_hash($password, PASSWORD_BCRYPT)); // Encripta la contraseña
+        $user->setLatitude($latitude ? (float)$latitude : null);
+        $user->setLongitude($longitude ? (float)$longitude : null);
         $user->setCreatedAt(new \DateTimeImmutable());
         $user->setIsActive(true);
 
-        // Guardar las fotos del DNI
-        if ($dniFrontFile) {
-            try {
+        // Subir las fotos del DNI
+        try {
+            if ($dniFrontFile) {
                 $dniFrontFileName = $this->uploadFile($dniFrontFile, $slugger);
                 $user->setDniFrontPhoto($dniFrontFileName);
-            } catch (FileException $e) {
-                $this->addFlash('error', 'Error al subir la foto del DNI (frente).');
-                return $this->redirectToRoute('user_register');
             }
-        }
-
-        if ($dniBackFile) {
-            try {
+            if ($dniBackFile) {
                 $dniBackFileName = $this->uploadFile($dniBackFile, $slugger);
                 $user->setDniBackPhoto($dniBackFileName);
-            } catch (FileException $e) {
-                $this->addFlash('error', 'Error al subir la foto del DNI (dorso).');
-                return $this->redirectToRoute('user_register');
             }
+        } catch (FileException $e) {
+            $this->addFlash('error', 'Error al subir las fotos del DNI: ' . $e->getMessage());
+            return $this->redirectToRoute('user_register');
         }
 
         // Guardar el usuario en la base de datos
@@ -106,7 +116,7 @@ class RegistrationController extends AbstractController
                 $newFilename
             );
         } catch (FileException $e) {
-            throw new FileException('No se pudo guardar el archivo.');
+            throw new FileException('No se pudo guardar el archivo: ' . $e->getMessage());
         }
 
         return $newFilename;
