@@ -19,7 +19,7 @@
         <div class="mb-3">
             <input type="text" name="apellido" class="form-control" placeholder="Apellido" required>
         </div>
-<!-- DNI -->
+        <!-- DNI -->
         <div class="mb-3">
             <input type="text" name="dni" class="form-control" placeholder="DNI" required>
         </div>
@@ -31,7 +31,7 @@
             <label>Foto del DNI (dorso)</label>
             <input type="file" name="dni_back" class="form-control" accept="image/*" required>
         </div>
-        <!-- Fecha de nacimiento -->
+ <!-- Fecha de nacimiento -->
         <div class="mb-3">
             <label>Fecha de nacimiento</label>
             <div class="d-flex gap-2">
@@ -72,20 +72,20 @@
         <div class="mb-3">
             <input type="text" name="telefono" class="form-control" placeholder="Teléfono" required>
         </div>
-
         <!-- Dirección -->
         <div class="input-group mb-3">
             <input type="text" id="direccion" class="form-control" placeholder="Buscar dirección">
             <button class="btn btn-primary" id="buscarDireccion" type="button">Buscar</button>
         </div>
 
-        <!-- Mapa en una card -->
+        <!-- Mapa -->
         <div class="card mb-3" style="height: 300px;">
             <div id="map" style="height: 100%;"></div>
         </div>
 
-        <!-- Coordenadas y calle (campos ocultos) -->
+        <!-- Campos ocultos -->
         <input type="hidden" name="street" id="street">
+        <input type="hidden" name="streetNumber" id="streetNumber">
         <input type="hidden" name="latitude" id="latitude">
         <input type="hidden" name="longitude" id="longitude">
 
@@ -112,12 +112,13 @@
         document.getElementById('latitude').value = position.lat;
         document.getElementById('longitude').value = position.lng;
 
-        // Actualizar dirección al mover marcador
+        // Actualizar dirección y número de calle
         fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.lat}&lon=${position.lng}`)
             .then(response => response.json())
             .then(data => {
                 if (data && data.display_name) {
                     document.getElementById('street').value = data.display_name;
+                    document.getElementById('streetNumber').value = extractStreetNumber(data.display_name);
                 }
             })
             .catch(error => console.error('Error:', error));
@@ -137,6 +138,7 @@
                         document.getElementById('latitude').value = lat;
                         document.getElementById('longitude').value = lon;
                         document.getElementById('street').value = data[0].display_name;
+                        document.getElementById('streetNumber').value = extractStreetNumber(data[0].display_name);
                     } else {
                         alert('La dirección no pudo ser localizada.');
                     }
@@ -144,5 +146,10 @@
                 .catch(error => console.error('Error:', error));
         }
     });
+
+    function extractStreetNumber(address) {
+        var match = address.match(/\b\d+\b/);
+        return match ? match[0] : '';
+    }
 </script>
 {% endblock %}

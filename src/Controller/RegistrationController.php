@@ -40,6 +40,7 @@ class RegistrationController extends AbstractController
         $phone = $request->request->get('telefono');
         $dni = $request->request->get('dni');
         $street = $request->request->get('street', '');
+        $streetNumber = $request->request->get('streetNumber', '');
         $latitude = $request->request->get('latitude', '');
         $longitude = $request->request->get('longitude', '');
 
@@ -50,9 +51,9 @@ class RegistrationController extends AbstractController
         }
         $birthDate = new \DateTimeImmutable(sprintf('%04d-%02d-%02d', $anio, $mes, $dia));
 
-        // Validar que la dirección no esté vacía
-        if (empty($street)) {
-            $this->addFlash('error', 'La dirección es obligatoria.');
+        // Validar que la dirección y número de calle no estén vacíos
+        if (empty($street) || empty($streetNumber)) {
+            $this->addFlash('error', 'La dirección y el número de la calle son obligatorios.');
             return $this->redirectToRoute('user_register');
         }
 
@@ -70,6 +71,7 @@ class RegistrationController extends AbstractController
         $user->setPhone($phone);
         $user->setDni($dni);
         $user->setStreet($street);
+        $user->setStreetNumber($streetNumber);
         $user->setLatitude($latitude ? (float)$latitude : null);
         $user->setLongitude($longitude ? (float)$longitude : null);
         $user->setCreatedAt(new \DateTimeImmutable());

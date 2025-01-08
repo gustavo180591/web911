@@ -47,7 +47,7 @@ class User
     #[ORM\Column(length: 255)]
     private ?string $street = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $streetNumber = null;
 
     #[ORM\Column(length: 255, nullable: true)]
