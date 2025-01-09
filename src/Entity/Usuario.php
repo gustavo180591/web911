@@ -59,6 +59,9 @@ private ?int $id = null;
     #[ORM\Column(length: 255)]
     private ?string $password = null;
 
+    #[ORM\ManyToOne(inversedBy: 'usuarios')]
+    private ?Denuncia $denuncias = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -240,6 +243,18 @@ private ?int $id = null;
     public function setPassword(string $password): static
     {
         $this->password = $password;
+
+        return $this;
+    }
+
+    public function getDenuncias(): ?Denuncia
+    {
+        return $this->denuncias;
+    }
+
+    public function setDenuncias(?Denuncia $denuncias): static
+    {
+        $this->denuncias = $denuncias;
 
         return $this;
     }

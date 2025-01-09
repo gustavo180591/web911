@@ -2,39 +2,39 @@
 
 namespace App\Repository;
 
-use App\Entity\Denuncia;
+use App\Entity\Estadistica;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Denuncia>
+ * @extends ServiceEntityRepository<Estadistica>
  */
-class DenunciaRepository extends ServiceEntityRepository
+class EstadisticaRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Denuncia::class);
+        parent::__construct($registry, Estadistica::class);
     }
 
     //    /**
-    //     * @return Denuncia[] Returns an array of Denuncia objects
+    //     * @return Estadistica[] Returns an array of Estadistica objects
     //     */
     //    public function findByExampleField($value): array
     //    {
-    //        return $this->createQueryBuilder('d')
-    //            ->andWhere('d.exampleField = :val')
+    //        return $this->createQueryBuilder('e')
+    //            ->andWhere('e.exampleField = :val')
     //            ->setParameter('val', $value)
-    //            ->orderBy('d.id', 'ASC')
+    //            ->orderBy('e.id', 'ASC')
     //            ->setMaxResults(10)
     //            ->getQuery()
     //            ->getResult()
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?Denuncia
+    //    public function findOneBySomeField($value): ?Estadistica
     //    {
-    //        return $this->createQueryBuilder('d')
-    //            ->andWhere('d.exampleField = :val')
+    //        return $this->createQueryBuilder('e')
+    //            ->andWhere('e.exampleField = :val')
     //            ->setParameter('val', $value)
     //            ->getQuery()
     //            ->getOneOrNullResult()
