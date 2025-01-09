@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\DenunciaRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: DenunciaRepository::class)]
 class Denuncia
@@ -34,6 +36,14 @@ class Denuncia
 
     #[ORM\Column(length: 50)]
     private ?string $estado = null; // Valores como "pendiente", "en proceso", "resuelto"
+
+    #[ORM\ManyToMany(targetEntity: Autoridad::class, inversedBy: 'denuncias')]
+    private Collection $autoridades; // Relación ManyToMany con Autoridad
+
+    public function __construct()
+    {
+        $this->autoridades = new ArrayCollection();
+    }
 
     // Getters y setters para cada propiedad
 
@@ -122,6 +132,33 @@ class Denuncia
     public function setEstado(string $estado): static
     {
         $this->estado = $estado;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Autoridad>
+     */
+    public function getAutoridades(): Collection
+    {
+        return $this->autoridades;
+    }
+
+    public function addAutoridad(Autoridad $autoridad): static
+    {
+        if (!$this->autoridades->contains($autoridad)) {
+            $this->autoridades->add($autoridad);
+            $autoridad->addDenuncia($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAutoridad(Autoridad $autoridad): static
+    {
+        if ($this->autoridades->removeElement($autoridad)) {
+            $autoridad->removeDenuncia($this);
+        }
 
         return $this;
     }
