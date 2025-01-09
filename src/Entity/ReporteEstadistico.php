@@ -6,6 +6,7 @@ use App\Repository\ReporteEstadisticoRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ReporteEstadisticoRepository::class)]
 class ReporteEstadistico
@@ -16,15 +17,21 @@ class ReporteEstadistico
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\NotBlank(message: 'El tipo no puede estar vacío.')]
+    #[Assert\Choice(choices: ['mensual', 'semanal', 'personalizado'], message: 'El tipo debe ser "mensual", "semanal" o "personalizado".')]
     private ?string $tipo = null;
 
     #[ORM\Column(type: 'datetime')]
+    #[Assert\NotNull(message: 'La fecha de inicio no puede estar vacía.')]
+    #[Assert\LessThan(propertyPath: 'fecha_fin', message: 'La fecha de inicio debe ser anterior a la fecha de fin.')]
     private ?\DateTimeInterface $fecha_inicio = null;
 
     #[ORM\Column(type: 'datetime')]
+    #[Assert\NotNull(message: 'La fecha de fin no puede estar vacía.')]
     private ?\DateTimeInterface $fecha_fin = null;
 
     #[ORM\Column(type: 'json')]
+    #[Assert\NotNull(message: 'Los datos no pueden estar vacíos.')]
     private ?array $datos = null;
 
     #[ORM\ManyToMany(targetEntity: Denuncia::class)]

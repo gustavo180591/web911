@@ -6,6 +6,7 @@ use App\Repository\AutoridadRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: AutoridadRepository::class)]
 class Autoridad
@@ -16,16 +17,26 @@ class Autoridad
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'El nombre no puede estar vacío.')]
+    #[Assert\Length(max: 255, maxMessage: 'El nombre no puede exceder los 255 caracteres.')]
     private ?string $nombre = null;
 
     #[ORM\Column(length: 255, unique: true)]
+    #[Assert\NotBlank(message: 'El email no puede estar vacío.')]
+    #[Assert\Email(message: 'El email "{{ value }}" no es válido.')]
     private ?string $email = null;
 
     #[ORM\Column(length: 20, nullable: true)]
+    #[Assert\Length(max: 20, maxMessage: 'El teléfono no puede exceder los 20 caracteres.')]
     private ?string $telefono = null;
 
     #[ORM\Column(length: 100)]
+    #[Assert\NotBlank(message: 'El área responsable no puede estar vacía.')]
+    #[Assert\Length(max: 100, maxMessage: 'El área responsable no puede exceder los 100 caracteres.')]
     private ?string $area_responsable = null;
+
+    #[ORM\Column(options: ['default' => true])]
+    private ?bool $activo = true; // Indica si la autoridad está activa
 
     #[ORM\ManyToMany(targetEntity: Denuncia::class, mappedBy: 'autoridades')]
     private Collection $denuncias; // Relación ManyToMany con Denuncia
@@ -86,6 +97,18 @@ class Autoridad
     public function setAreaResponsable(string $area_responsable): static
     {
         $this->area_responsable = $area_responsable;
+
+        return $this;
+    }
+
+    public function isActivo(): ?bool
+    {
+        return $this->activo;
+    }
+
+    public function setActivo(bool $activo): static
+    {
+        $this->activo = $activo;
 
         return $this;
     }
