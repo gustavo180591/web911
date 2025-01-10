@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Historial de Notificaciones{% endblock %}
+
+{% block body %}
+<div class="container mx-auto mt-10 shadow-md bg-white p-6 rounded-lg">
+    <h1 class="text-2xl font-bold text-center">Historial de Notificaciones</h1>
+    <table class="w-full mt-6 border-collapse border border-gray-300">
+        <thead>
+            <tr class="bg-gray-200">
+                <th class="border border-gray-300 px-4 py-2">Usuario</th>
+                <th class="border border-gray-300 px-4 py-2">Mensaje</th>
+                <th class="border border-gray-300 px-4 py-2">Fecha</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for notificacion in historial %}
+                <tr>
+                    <td class="border border-gray-300 px-4 py-2">{{ notificacion.usuario.nombre }}</td>
+                    <td class="border border-gray-300 px-4 py-2">{{ notificacion.mensaje }}</td>
+                    <td class="border border-gray-300 px-4 py-2">{{ notificacion.fechaHora|date('d/m/Y H:i') }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
