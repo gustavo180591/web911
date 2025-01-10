@@ -37,7 +37,7 @@ class DenunciaController extends AbstractController
             return $this->redirectToRoute('denuncia_listar');
         }
 
-        return $this->render('denuncia/crear.html.twig', [
+        return $this->render('denuncia/denuncia_crear.html.twig', [
             'form' => $form->createView(),
         ]);
     }
@@ -60,7 +60,7 @@ class DenunciaController extends AbstractController
             10
         );
 
-        return $this->render('denuncia/listar.html.twig', [
+        return $this->render('denuncia/denuncia_listar.html.twig', [
             'denuncias' => $paginacion,
         ]);
     }
@@ -80,7 +80,7 @@ class DenunciaController extends AbstractController
             10
         );
 
-        return $this->render('denuncia/listar_todas.html.twig', [
+        return $this->render('denuncia/denuncia_listar_admin.html.twig', [
             'denuncias' => $paginacion,
         ]);
     }
@@ -103,7 +103,7 @@ class DenunciaController extends AbstractController
             return $this->redirectToRoute('denuncia_listar_todas');
         }
 
-        return $this->render('denuncia/actualizar.html.twig', [
+        return $this->render('denuncia/denuncia_editar.html.twig', [
             'form' => $form->createView(),
         ]);
     }
@@ -157,6 +157,6 @@ class DenunciaController extends AbstractController
     public function geolocalizacion(): Response
     {
         // Implementación futura con un mapa interactivo
-        return $this->render('denuncia/geolocalizacion.html.twig');
+        return $this->render('denuncia/denuncia_mapa.html.twig');
     }
 }

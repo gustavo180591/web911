@@ -38,7 +38,7 @@ class UsuarioController extends AbstractController
             return $this->redirectToRoute('usuario_login');
         }
 
-        return $this->render('usuario/registro.html.twig', [
+        return $this->render('usuario/usuario_registro.html.twig', [
             'form' => $form->createView(),
         ]);
     }
@@ -49,7 +49,7 @@ class UsuarioController extends AbstractController
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        return $this->render('usuario/login.html.twig', [
+        return $this->render('usuario/usuario_login.html.twig', [
             'last_username' => $lastUsername,
             'error' => $error,
         ]);
@@ -82,7 +82,7 @@ class UsuarioController extends AbstractController
             return $this->redirectToRoute('usuario_perfil');
         }
 
-        return $this->render('usuario/perfil.html.twig', [
+        return $this->render('usuario/usuario_perfil.html.twig', [
             'form' => $form->createView(),
         ]);
     }
@@ -92,7 +92,7 @@ class UsuarioController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        return $this->render('usuario/listado.html.twig', [
+        return $this->render('usuario/usuario_listar.html.twig', [
             'usuarios' => $usuarioRepository->findAll(),
         ]);
     }

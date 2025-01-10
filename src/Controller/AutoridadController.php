@@ -36,7 +36,7 @@ class AutoridadController extends AbstractController
             return $this->redirectToRoute('autoridad_listar');
         }
 
-        return $this->render('autoridad/crear.html.twig', [
+        return $this->render('autoridad/autoridad_crear.html.twig', [
             'form' => $form->createView(),
         ]);
     }
@@ -46,7 +46,7 @@ class AutoridadController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        return $this->render('autoridad/listar.html.twig', [
+        return $this->render('autoridad/autoridad_listar.html.twig', [
             'autoridades' => $autoridadRepository->findAll(),
         ]);
     }
@@ -68,7 +68,7 @@ class AutoridadController extends AbstractController
             return $this->redirectToRoute('autoridad_listar');
         }
 
-        return $this->render('autoridad/editar.html.twig', [
+        return $this->render('autoridad/autoridad_editar.html.twig', [
             'form' => $form->createView(),
         ]);
     }
@@ -130,7 +130,7 @@ class AutoridadController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        return $this->render('autoridad/denuncias.html.twig', [
+        return $this->render('autoridad/autoridad_denuncias.html.twig', [
             'autoridad' => $autoridad,
             'denuncias' => $autoridad->getDenuncias(),
         ]);

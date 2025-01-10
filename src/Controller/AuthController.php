@@ -1,6 +1,4 @@
 <?php
-// Aquí se incluirán todos los controladores actualizados para reflejar
-// la integración con security.yaml y las vistas Twig
 
 namespace App\Controller;
 
@@ -19,11 +17,10 @@ class AuthController extends AbstractController
     #[Route('/login', name: 'auth_login', methods: ['GET', 'POST'])]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        // Obtener error de autenticación si existe
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        return $this->render('auth/login.html.twig', [
+        return $this->render('auth/auth_login.html.twig', [
             'last_username' => $lastUsername,
             'error' => $error,
         ]);
@@ -32,7 +29,7 @@ class AuthController extends AbstractController
     #[Route('/logout', name: 'auth_logout', methods: ['GET'])]
     public function logout(): void
     {
-        throw new \LogicException('Este método será interceptado por el firewall de seguridad.');
+        throw new \LogicException('This method will be intercepted by the logout key on your firewall.');
     }
 
     #[Route('/forgot-password', name: 'auth_forgot_password', methods: ['GET', 'POST'])]
@@ -47,11 +44,10 @@ class AuthController extends AbstractController
                 return $this->redirectToRoute('auth_forgot_password');
             }
 
-            // Lógica para enviar el correo con token de recuperación (a implementar)
             $this->addFlash('success', 'Correo de recuperación enviado.');
         }
 
-        return $this->render('auth/forgot_password.html.twig');
+        return $this->render('auth/auth_forgot_password.html.twig');
     }
 
     #[Route('/reset-password/{token}', name: 'auth_reset_password', methods: ['GET', 'POST'])]
@@ -78,10 +74,12 @@ class AuthController extends AbstractController
             return $this->redirectToRoute('auth_login');
         }
 
-        return $this->render('auth/reset_password.html.twig', ['token' => $token]);
+        return $this->render('auth/auth_reset_password.html.twig', ['token' => $token]);
+    }
+
+    #[Route('/bloqueo', name: 'auth_bloqueo', methods: ['GET'])]
+    public function bloqueo(): Response
+    {
+        return $this->render('auth/auth_bloqueo.html.twig');
     }
 }
-
-// Nota: Este es solo un ejemplo para AuthController
-// El mismo principio se aplicará a AutoridadController, DashboardController, etc.
-// Por favor, proporciona una indicación clara para cada controlador que desees actualizar completamente.

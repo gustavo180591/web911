@@ -16,7 +16,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 #[Route('/reporte')]
 class ReporteEstadisticoController extends AbstractController
 {
-    #[Route('/crear', name: 'reporte_crear', methods: ['GET', 'POST'])]
+    #[Route('/crear', name: 'reporte_estadistico_crear', methods: ['GET', 'POST'])]
     public function crear(
         Request $request,
         EntityManagerInterface $entityManager,
@@ -38,36 +38,36 @@ class ReporteEstadisticoController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash('success', 'Reporte creado correctamente.');
-            return $this->redirectToRoute('reporte_listar');
+            return $this->redirectToRoute('reporte_estadistico_listar');
         }
 
-        return $this->render('reporte/crear.html.twig', [
+        return $this->render('reporte/reporte_estadistico_crear.html.twig', [
             'form' => $form->createView(),
         ]);
     }
 
-    #[Route('/listar', name: 'reporte_listar', methods: ['GET'])]
+    #[Route('/listar', name: 'reporte_estadistico_listar', methods: ['GET'])]
     public function listar(ReporteEstadisticoRepository $reporteRepository): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        return $this->render('reporte/listar.html.twig', [
+        return $this->render('reporte/reporte_estadistico_listar.html.twig', [
             'reportes' => $reporteRepository->findAll(),
         ]);
     }
 
-    #[Route('/detalle/{id}', name: 'reporte_detalle', methods: ['GET'])]
+    #[Route('/detalle/{id}', name: 'reporte_estadistico_detalle', methods: ['GET'])]
     public function detalle(ReporteEstadistico $reporte): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        return $this->render('reporte/detalle.html.twig', [
+        return $this->render('reporte/reporte_estadistico_detalle.html.twig', [
             'reporte' => $reporte,
             'datos' => $reporte->getDatos(),
         ]);
     }
 
-    #[Route('/exportar/{id}/{formato}', name: 'reporte_exportar', methods: ['GET'])]
+    #[Route('/exportar/{id}/{formato}', name: 'reporte_estadistico_exportar', methods: ['GET'])]
     public function exportar(
         ReporteEstadistico $reporte,
         string $formato,
@@ -93,7 +93,7 @@ class ReporteEstadisticoController extends AbstractController
                 break;
             default:
                 $this->addFlash('error', 'Formato no soportado.');
-                return $this->redirectToRoute('reporte_listar');
+                return $this->redirectToRoute('reporte_estadistico_listar');
         }
 
         return new Response($contenido, 200, [
@@ -147,7 +147,6 @@ class ReporteEstadisticoController extends AbstractController
 
     private function generatePdf(array $datos): string
     {
-        // Simulación: Se puede usar una biblioteca como Dompdf para generar el PDF.
         $contenido = "Reporte Estadístico\n\n";
         foreach ($datos as $clave => $valor) {
             $contenido .= strtoupper($clave) . ":\n";

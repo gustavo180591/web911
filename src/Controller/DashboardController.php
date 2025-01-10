@@ -28,7 +28,7 @@ class DashboardController extends AbstractController
         // Reportes estadísticos recientes
         $reportes = $reporteEstadisticoRepository->findRecent();
 
-        return $this->render('dashboard/index.html.twig', [
+        return $this->render('dashboard/dashboard_index.html.twig', [
             'total_denuncias' => $totalDenuncias,
             'denuncias_por_estado' => $denunciasPorEstado,
             'categorias_denuncias' => $categoriasDenuncias,
@@ -45,7 +45,7 @@ class DashboardController extends AbstractController
     ): Response {
         $denuncias = $denunciaRepository->findByCategoria($categoria);
 
-        return $this->render('dashboard/detalles_categoria.html.twig', [
+        return $this->render('dashboard/dashboard_detalles_categoria.html.twig', [
             'categoria' => $categoria,
             'denuncias' => $denuncias,
         ]);

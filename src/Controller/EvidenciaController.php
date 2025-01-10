@@ -2,14 +2,11 @@
 
 namespace App\Controller;
 
-use App\Entity\Denuncia;
 use App\Entity\Evidencia;
+use App\Entity\Denuncia;
 use App\Form\EvidenciaType;
-use App\Repository\EvidenciaRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,8 +18,7 @@ class EvidenciaController extends AbstractController
     public function subir(
         Denuncia $denuncia,
         Request $request,
-        EntityManagerInterface $entityManager,
-        string $uploadDir
+        EntityManagerInterface $entityManager
     ): Response {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
@@ -36,11 +32,12 @@ class EvidenciaController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var UploadedFile $archivo */
             $archivo = $form->get('archivo')->getData();
 
             if ($archivo) {
                 $nombreArchivo = uniqid() . '.' . $archivo->guessExtension();
+                $uploadDir = $this->getParameter('uploads_directory');
+
                 try {
                     $archivo->move($uploadDir, $nombreArchivo);
                     $evidencia->setArchivo($nombreArchivo);
@@ -51,13 +48,13 @@ class EvidenciaController extends AbstractController
 
                     $this->addFlash('success', 'Evidencia subida correctamente.');
                     return $this->redirectToRoute('denuncia_listar');
-                } catch (FileException $e) {
+                } catch (\Exception $e) {
                     $this->addFlash('error', 'Error al subir el archivo.');
                 }
             }
         }
 
-        return $this->render('evidencia/subir.html.twig', [
+        return $this->render('evidencia/evidencia_subir.html.twig', [
             'form' => $form->createView(),
             'denuncia' => $denuncia,
         ]);
@@ -68,20 +65,18 @@ class EvidenciaController extends AbstractController
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
-        $evidencias = $denuncia->getEvidencias();
-
-        return $this->render('evidencia/listar.html.twig', [
-            'evidencias' => $evidencias,
+        return $this->render('evidencia/evidencia_listar.html.twig', [
             'denuncia' => $denuncia,
+            'evidencias' => $denuncia->getEvidencias(),
         ]);
     }
 
     #[Route('/descargar/{id}', name: 'evidencia_descargar', methods: ['GET'])]
-    public function descargar(Evidencia $evidencia, string $uploadDir): Response
+    public function descargar(Evidencia $evidencia): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
-        $rutaArchivo = $uploadDir . '/' . $evidencia->getArchivo();
+        $rutaArchivo = $this->getParameter('uploads_directory') . '/' . $evidencia->getArchivo();
         if (!file_exists($rutaArchivo)) {
             $this->addFlash('error', 'El archivo no existe.');
             return $this->redirectToRoute('denuncia_listar');
@@ -93,8 +88,7 @@ class EvidenciaController extends AbstractController
     #[Route('/eliminar/{id}', name: 'evidencia_eliminar', methods: ['POST'])]
     public function eliminar(
         Evidencia $evidencia,
-        EntityManagerInterface $entityManager,
-        string $uploadDir
+        EntityManagerInterface $entityManager
     ): Response {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
@@ -104,7 +98,7 @@ class EvidenciaController extends AbstractController
             return $this->redirectToRoute('denuncia_listar_todas');
         }
 
-        $rutaArchivo = $uploadDir . '/' . $evidencia->getArchivo();
+        $rutaArchivo = $this->getParameter('uploads_directory') . '/' . $evidencia->getArchivo();
         if (file_exists($rutaArchivo)) {
             unlink($rutaArchivo);
         }

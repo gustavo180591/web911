@@ -69,7 +69,7 @@ class NotificacionController extends AbstractController
             10
         );
 
-        return $this->render('notificacion/listar.html.twig', [
+        return $this->render('notificacion/notificacion_listar.html.twig', [
             'notificaciones' => $paginacion,
         ]);
     }
@@ -119,18 +119,30 @@ class NotificacionController extends AbstractController
             throw $this->createAccessDeniedException('Acceso denegado.');
         }
 
-        // Simulación: Guardar preferencias en la base de datos
         $preferencias = $request->request->get('preferencias', []);
-        // Aquí deberías implementar el guardado en un campo de preferencias en el Usuario
+        // Implementar lógica para guardar preferencias en la base de datos
         $this->addFlash('success', 'Preferencias actualizadas correctamente.');
 
         return $this->redirectToRoute('notificacion_listar');
     }
 
-    #[Route('/websocket', name: 'notificacion_websocket', methods: ['GET'])]
-    public function websocket(): Response
-    {
-        // Implementación inicial de soporte para WebSocket
-        return $this->render('notificacion/websocket.html.twig');
+    #[Route('/historial', name: 'notificacion_historial', methods: ['GET'])]
+    public function historial(
+        NotificacionRepository $notificacionRepository,
+        PaginatorInterface $paginator,
+        Request $request
+    ): Response {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        $query = $notificacionRepository->findAllQuery();
+        $paginacion = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            10
+        );
+
+        return $this->render('notificacion/notificacion_historial.html.twig', [
+            'notificaciones' => $paginacion,
+        ]);
     }
 }
