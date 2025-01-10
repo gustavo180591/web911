@@ -16,28 +16,52 @@ class ReporteEstadisticoRepository extends ServiceEntityRepository
         parent::__construct($registry, ReporteEstadistico::class);
     }
 
-    //    /**
-    //     * @return ReporteEstadistico[] Returns an array of ReporteEstadistico objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('r')
-    //            ->andWhere('r.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('r.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    /**
+     * Encuentra los reportes estadísticos más recientes.
+     *
+     * @return array Devuelve un array con los 5 reportes más recientes ordenados por fecha_fin.
+     */
+    public function findRecent(): array
+    {
+        return $this->createQueryBuilder('r')
+            ->orderBy('r.fecha_fin', 'DESC')
+            ->setMaxResults(5)
+            ->getQuery()
+            ->getResult();
+    }
 
-    //    public function findOneBySomeField($value): ?ReporteEstadistico
-    //    {
-    //        return $this->createQueryBuilder('r')
-    //            ->andWhere('r.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    /**
+     * Encuentra reportes filtrados por tipo.
+     *
+     * @param string $tipo Tipo de reporte (mensual, semanal, personalizado).
+     * @return array Devuelve un array de reportes del tipo especificado.
+     */
+    public function findByTipo(string $tipo): array
+    {
+        return $this->createQueryBuilder('r')
+            ->where('r.tipo = :tipo')
+            ->setParameter('tipo', $tipo)
+            ->orderBy('r.fecha_fin', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Encuentra reportes filtrados por rango de fechas.
+     *
+     * @param \DateTimeInterface $inicio Fecha de inicio.
+     * @param \DateTimeInterface $fin Fecha de fin.
+     * @return array Devuelve un array de reportes que coinciden con el rango de fechas.
+     */
+    public function findByDateRange(\DateTimeInterface $inicio, \DateTimeInterface $fin): array
+    {
+        return $this->createQueryBuilder('r')
+            ->where('r.fecha_inicio >= :inicio')
+            ->andWhere('r.fecha_fin <= :fin')
+            ->setParameter('inicio', $inicio)
+            ->setParameter('fin', $fin)
+            ->orderBy('r.fecha_fin', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 }

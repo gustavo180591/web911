@@ -69,6 +69,16 @@ class Usuario
     #[ORM\Column(type: 'datetime', options: ['default' => 'CURRENT_TIMESTAMP'])]
     private ?\DateTimeInterface $fecha_registro = null;
 
+    #[ORM\Column(type: 'integer', options: ['default' => 0])]
+    private int $failedAttempts = 0;
+
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $locked = false;
+
+    #[ORM\Column(type: 'string', nullable: true)]
+    private ?string $resetToken = null;
+
+
     public function getId(): ?int
     {
         return $this->id;
