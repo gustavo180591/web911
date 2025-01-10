@@ -3,28 +3,27 @@
 {% block title %}Iniciar Sesión{% endblock %}
 
 {% block body %}
-<div class="container mx-auto max-w-md mt-10 shadow-md bg-white p-6 rounded-lg">
-    <h1 class="text-2xl font-bold text-center">Iniciar Sesión</h1>
-    <form method="post" class="mt-6 space-y-4">
-        <div>
-            <label for="email" class="block text-sm font-medium text-gray-700">Correo Electrónico</label>
-            <input type="email" id="email" name="email" class="w-full px-4 py-2 border rounded-md" required>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Iniciar Sesión</h1>
+    
+    <form method="post" action="{{ path('auth_login') }}" class="w-50 mx-auto">
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+        
+        <div class="mb-3">
+            <label for="email" class="form-label">Correo Electrónico</label>
+            <input type="email" name="email" id="email" class="form-control" placeholder="Ingresa tu correo" required>
         </div>
-        <div>
-            <label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
-            <input type="password" id="password" name="password" class="w-full px-4 py-2 border rounded-md" required>
+        
+        <div class="mb-3">
+            <label for="password" class="form-label">Contraseña</label>
+            <input type="password" name="password" id="password" class="form-control" placeholder="Ingresa tu contraseña" required>
         </div>
-        <div class="flex justify-between items-center">
-            <label class="flex items-center">
-                <input type="checkbox" name="remember_me" class="mr-2"> Recuérdame
-            </label>
-            <a href="{{ path('auth_forgot_password') }}" class="text-blue-500 hover:underline">¿Olvidaste tu contraseña?</a>
-        </div>
-        <div>
-            <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">
-                Iniciar Sesión
-            </button>
-        </div>
+        
+        <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
     </form>
+
+    <div class="text-center mt-3">
+        <a href="{{ path('auth_forgot_password') }}">¿Olvidaste tu contraseña?</a>
+    </div>
 </div>
 {% endblock %}

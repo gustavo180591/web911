@@ -22,11 +22,12 @@ security:
             form_login:
                 login_path: auth_login
                 check_path: auth_login
-                csrf_token_generator: security.csrf.token_manager
+                enable_csrf: true
+                username_parameter: email
+                password_parameter: password
             logout:
                 path: auth_logout
                 target: auth_login
-            anonymous: true
 
     # Control de acceso
     access_control:
