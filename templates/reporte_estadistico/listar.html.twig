@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Listado de Reportes{% endblock %}
+
+{% block body %}
+<div class="container mx-auto mt-10 shadow-md bg-white p-6 rounded-lg">
+    <h1 class="text-2xl font-bold text-center">Listado de Reportes</h1>
+    <form method="get" class="mt-6 space-y-4">
+        <div>
+            <label for="tipo" class="block text-sm font-medium text-gray-700">Filtrar por Tipo</label>
+            <select id="tipo" name="tipo" class="w-full px-4 py-2 border rounded-md">
+                <option value="">Todos</option>
+                <option value="mensual">Mensual</option>
+                <option value="semanal">Semanal</option>
+                <option value="personalizado">Personalizado</option>
+            </select>
+        </div>
+        <div>
+            <label for="fecha" class="block text-sm font-medium text-gray-700">Filtrar por Fecha</label>
+            <input type="date" id="fecha" name="fecha" class="w-full px-4 py-2 border rounded-md">
+        </div>
+        <div>
+            <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">
+                Aplicar Filtros
+            </button>
+        </div>
+    </form>
+    <table class="w-full mt-6 border-collapse border border-gray-300">
+        <thead>
+            <tr class="bg-gray-200">
+                <th class="border border-gray-300 px-4 py-2">Tipo</th>
+                <th class="border border-gray-300 px-4 py-2">Fecha de Inicio</th>
+                <th class="border border-gray-300 px-4 py-2">Fecha de Fin</th>
+                <th class="border border-gray-300 px-4 py-2">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for reporte in reportes %}
+                <tr>
+                    <td class="border border-gray-300 px-4 py-2">{{ reporte.tipo }}</td>
+                    <td class="border border-gray-300 px-4 py-2">{{ reporte.fechaInicio|date('d/m/Y') }}</td>
+                    <td class="border border-gray-300 px-4 py-2">{{ reporte.fechaFin|date('d/m/Y') }}</td>
+                    <td class="border border-gray-300 px-4 py-2 text-center">
+                        <a href="{{ path('reporte_detalle', {id: reporte.id}) }}" class="text-blue-500 hover:underline">Ver</a> |
+                        <a href="{{ path('reporte_exportar', {id: reporte.id}) }}" class="text-blue-500 hover:underline">Exportar</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Exportar Reporte{% endblock %}
+
+{% block body %}
+<div class="container mx-auto max-w-md mt-10 shadow-md bg-white p-6 rounded-lg text-center">
+    <h1 class="text-2xl font-bold">Exportar Reporte</h1>
+    <p class="mt-4 text-gray-700">Selecciona el formato para exportar el reporte:</p>
+    <form method="post" class="mt-6 space-y-4">
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Formato</label>
+            <div class="flex justify-center space-x-4">
+                <label class="flex items-center">
+                    <input type="radio" name="formato" value="pdf" class="mr-2"> PDF
+                </label>
+                <label class="flex items-center">
+                    <input type="radio" name="formato" value="excel" class="mr-2"> Excel
+                </label>
+                <label class="flex items-center">
+                    <input type="radio" name="formato" value="json" class="mr-2"> JSON
+                </label>
+            </div>
+        </div>
+        <div>
+            <button type="submit" class="w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600">
+                Exportar
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
