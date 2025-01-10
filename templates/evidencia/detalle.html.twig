@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Detalle de Evidencia{% endblock %}
+
+{% block body %}
+<div class="container mx-auto max-w-md mt-10 shadow-md bg-white p-6 rounded-lg">
+    <h1 class="text-2xl font-bold text-center">Detalle de Evidencia</h1>
+    <div class="mt-6">
+        {% if evidencia.tipo == 'imagen' %}
+            <img src="{{ evidencia.archivo }}" alt="Evidencia" class="w-full rounded-md">
+        {% elseif evidencia.tipo == 'video' %}
+            <video controls class="w-full rounded-md">
+                <source src="{{ evidencia.archivo }}" type="video/mp4">
+                Tu navegador no soporta videos.
+            </video>
+        {% elseif evidencia.tipo == 'audio' %}
+            <audio controls class="w-full">
+                <source src="{{ evidencia.archivo }}" type="audio/mpeg">
+                Tu navegador no soporta audios.
+            </audio>
+        {% else %}
+            <p class="text-center text-gray-700">
+                <a href="{{ evidencia.archivo }}" class="text-blue-500 hover:underline" download>Descargar Documento</a>
+            </p>
+        {% endif %}
+    </div>
+    <div class="mt-6 text-center">
+        <a href="{{ path('evidencia_listar', {denuncia_id: evidencia.denuncia.id}) }}" class="text-blue-500 hover:underline">Volver a la Lista</a>
+    </div>
+</div>
+{% endblock %}

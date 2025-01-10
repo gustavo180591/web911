@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Evidencias de la Denuncia{% endblock %}
+
+{% block body %}
+<div class="container mx-auto mt-10 shadow-md bg-white p-6 rounded-lg">
+    <h1 class="text-2xl font-bold text-center">Evidencias</h1>
+    <p class="text-center text-gray-500">Archivos asociados a la denuncia <strong>#{{ denuncia.numeroCaso }}</strong>.</p>
+    <div class="mt-6">
+        <ul class="space-y-4">
+            {% for evidencia in evidencias %}
+                <li class="border border-gray-300 p-4 rounded-md flex justify-between items-center">
+                    <span>{{ evidencia.tipo|capitalize }} - {{ evidencia.archivo|split('/')|last }}</span>
+                    <div class="space-x-4">
+                        <a href="{{ path('evidencia_detalle', {id: evidencia.id}) }}" class="text-blue-500 hover:underline">Ver</a>
+                        <a href="{{ path('evidencia_eliminar', {id: evidencia.id}) }}" class="text-red-500 hover:underline">Eliminar</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="mt-6 text-center">
+        <a href="{{ path('denuncia_detalle', {id: denuncia.id}) }}" class="text-blue-500 hover:underline">Volver a la Denuncia</a>
+    </div>
+</div>
+{% endblock %}
