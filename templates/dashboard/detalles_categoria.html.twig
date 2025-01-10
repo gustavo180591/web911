@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Detalles de Categoría{% endblock %}
+
+{% block body %}
+<div class="container mx-auto mt-10 shadow-md bg-white p-6 rounded-lg">
+    <h1 class="text-2xl font-bold text-center">Detalles de la Categoría: {{ categoria }}</h1>
+    <p class="text-center text-gray-500 mt-4">Total de denuncias: <strong>{{ total }}</strong></p>
+    <ul class="space-y-4 mt-6">
+        {% for denuncia in denuncias %}
+            <li class="border border-gray-300 p-4 rounded-md">
+                <p><strong>Estado:</strong> {{ denuncia.estado }}</p>
+                <p><strong>Fecha:</strong> {{ denuncia.fechaHora|date('d/m/Y H:i') }}</p>
+                <p><strong>Descripción:</strong> {{ denuncia.descripcion|slice(0, 100) }}...</p>
+                <a href="{{ path('denuncia_detalle', {id: denuncia.id}) }}" class="text-blue-500 hover:underline">Ver Detalles</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <div class="mt-6 text-center">
+        <a href="{{ path('dashboard_index') }}" class="text-blue-500 hover:underline">Volver al Dashboard</a>
+    </div>
+</div>
+{% endblock %}
