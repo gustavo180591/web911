@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Asociar Denuncia{% endblock %}
+
+{% block body %}
+<div class="container mx-auto max-w-md mt-10 shadow-md bg-white p-6 rounded-lg">
+    <h1 class="text-2xl font-bold text-center">Asociar Denuncia</h1>
+    <form method="post" class="mt-6 space-y-4">
+        <div>
+            <label for="denuncia" class="block text-sm font-medium text-gray-700">Denuncia</label>
+            <select id="denuncia" name="denuncia" class="w-full px-4 py-2 border rounded-md" required>
+                {% for denuncia in denuncias %}
+                    <option value="{{ denuncia.id }}">#{{ denuncia.numeroCaso }} - {{ denuncia.categoria }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">
+                Asociar
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Listado de Autoridades{% endblock %}
+
+{% block body %}
+<div class="container mx-auto mt-10 shadow-md bg-white p-6 rounded-lg">
+    <h1 class="text-2xl font-bold text-center">Listado de Autoridades</h1>
+    <table class="w-full mt-6 border-collapse border border-gray-300">
+        <thead>
+            <tr class="bg-gray-200">
+                <th class="border border-gray-300 px-4 py-2">Nombre</th>
+                <th class="border border-gray-300 px-4 py-2">Correo Electrónico</th>
+                <th class="border border-gray-300 px-4 py-2">Teléfono</th>
+                <th class="border border-gray-300 px-4 py-2">Área Responsable</th>
+                <th class="border border-gray-300 px-4 py-2">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for autoridad in autoridades %}
+                <tr>
+                    <td class="border border-gray-300 px-4 py-2">{{ autoridad.nombre }}</td>
+                    <td class="border border-gray-300 px-4 py-2">{{ autoridad.email }}</td>
+                    <td class="border border-gray-300 px-4 py-2">{{ autoridad.telefono }}</td>
+                    <td class="border border-gray-300 px-4 py-2">{{ autoridad.areaResponsable }}</td>
+                    <td class="border border-gray-300 px-4 py-2 text-center">
+                        <a href="{{ path('autoridad_editar', {id: autoridad.id}) }}" class="text-blue-500 hover:underline">Editar</a> |
+                        <a href="{{ path('autoridad_eliminar', {id: autoridad.id}) }}" class="text-red-500 hover:underline">Eliminar</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
