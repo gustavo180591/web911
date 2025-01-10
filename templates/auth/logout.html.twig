@@ -1,20 +1,17 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Cierre de Sesión{% endblock %}
+{% block title %}Cerrar Sesión{% endblock %}
 
 {% block body %}
 <div class="container mx-auto max-w-md mt-10 shadow-md bg-white p-6 rounded-lg text-center">
-    <h1 class="text-2xl font-bold text-green-500">Has cerrado sesión</h1>
-    <p class="mt-4 text-gray-700">
-        Tu sesión se ha cerrado correctamente. Gracias por usar nuestro sistema.
-    </p>
-    <p class="mt-4 text-gray-700">
-        Si deseas volver a iniciar sesión, haz clic en el botón de abajo.
-    </p>
-    <div class="mt-6">
-        <a href="{{ path('auth_login') }}" class="w-full bg-blue-500 text-white py-2 px-6 rounded-md hover:bg-blue-600">
-            Iniciar Sesión
-        </a>
+    <h1 class="text-2xl font-bold">¿Deseas Cerrar Sesión?</h1>
+    <form method="post" class="mt-6">
+        <button type="submit" class="w-full bg-red-500 text-white py-2 rounded-md hover:bg-red-600">
+            Cerrar Sesión
+        </button>
+    </form>
+    <div class="mt-4">
+        <a href="{{ path('dashboard_index') }}" class="text-blue-500 hover:underline">Cancelar</a>
     </div>
 </div>
 {% endblock %}

@@ -5,13 +5,10 @@
 {% block body %}
 <div class="container mx-auto max-w-md mt-10 shadow-md bg-white p-6 rounded-lg text-center">
     <h1 class="text-2xl font-bold text-red-500">Cuenta Bloqueada</h1>
-    <p class="mt-4 text-gray-700">
-        Tu cuenta ha sido bloqueada debido a múltiples intentos fallidos de inicio de sesión.
-    </p>
-    <p class="mt-2 text-gray-700">
-        Por favor, utiliza el proceso de 
-        <a href="{{ path('auth_forgot_password') }}" class="text-blue-500 hover:underline">recuperación de contraseña</a> 
-        o contacta al administrador.
-    </p>
+    <p class="mt-4 text-gray-700">Tu cuenta ha sido bloqueada debido a múltiples intentos fallidos de inicio de sesión.</p>
+    <p class="mt-4 text-gray-500">Por favor, contacta al soporte técnico para desbloquear tu cuenta.</p>
+    <div class="mt-6">
+        <a href="{{ path('auth_login') }}" class="text-blue-500 hover:underline">Volver al Inicio</a>
+    </div>
 </div>
 {% endblock %}
