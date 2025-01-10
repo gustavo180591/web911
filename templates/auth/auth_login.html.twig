@@ -4,26 +4,36 @@
 
 {% block body %}
 <div class="container mt-5">
-    <h1 class="text-center mb-4">Iniciar Sesión</h1>
+    <h1 class="text-center mb-4 text-primary">Iniciar Sesión</h1>
+    
+    {% if error %}
+    <div class="alert alert-danger text-center">
+        {{ error.messageKey|trans(error.messageData, 'security') }}
+    </div>
+    {% endif %}
     
     <form method="post" action="{{ path('auth_login') }}" class="w-50 mx-auto">
         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
         
         <div class="mb-3">
             <label for="email" class="form-label">Correo Electrónico</label>
-            <input type="email" name="email" id="email" class="form-control" placeholder="Ingresa tu correo" required>
+            <input type="email" name="email" id="email" class="form-control" placeholder="Ingresa tu correo" required value="{{ last_username }}" aria-label="Correo Electrónico">
         </div>
         
         <div class="mb-3">
             <label for="password" class="form-label">Contraseña</label>
-            <input type="password" name="password" id="password" class="form-control" placeholder="Ingresa tu contraseña" required>
+            <input type="password" name="password" id="password" class="form-control" placeholder="Ingresa tu contraseña" required aria-label="Contraseña">
         </div>
         
         <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
     </form>
 
     <div class="text-center mt-3">
-        <a href="{{ path('auth_forgot_password') }}">¿Olvidaste tu contraseña?</a>
+        <a href="{{ path('auth_forgot_password') }}" class="text-decoration-none">¿Olvidaste tu contraseña?</a>
+    </div>
+
+    <div class="text-center mt-3">
+        <a href="{{ path('usuario_registro') }}" class="text-decoration-none">¿No tienes cuenta? Regístrate aquí</a>
     </div>
 </div>
 {% endblock %}
