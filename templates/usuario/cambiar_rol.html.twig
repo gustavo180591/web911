@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Cambiar Rol{% endblock %}
+
+{% block body %}
+<div class="container mx-auto max-w-md mt-10 shadow-md bg-white p-6 rounded-lg">
+    <h1 class="text-2xl font-bold text-center">Cambiar Rol</h1>
+    <form method="post" class="mt-6 space-y-4">
+        <div>
+            <label for="rol" class="block text-sm font-medium text-gray-700">Rol</label>
+            <select id="rol" name="rol" class="w-full px-4 py-2 border rounded-md" required>
+                <option value="usuario" {% if usuario.rol == 'usuario' %}selected{% endif %}>Usuario</option>
+                <option value="autoridad" {% if usuario.rol == 'autoridad' %}selected{% endif %}>Autoridad</option>
+                <option value="admin" {% if usuario.rol == 'admin' %}selected{% endif %}>Administrador</option>
+            </select>
+        </div>
+        <div>
+            <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">
+                Guardar Cambios
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
