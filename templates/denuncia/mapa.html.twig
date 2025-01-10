@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mapa de Denuncias{% endblock %}
+
+{% block body %}
+<div class="container mx-auto mt-10 shadow-md bg-white p-6 rounded-lg">
+    <h1 class="text-2xl font-bold text-center">Mapa de Denuncias</h1>
+    <div class="mt-6">
+        <div id="map" class="w-full h-96 rounded-lg"></div>
+    </div>
+</div>
+
+{% block scripts %}
+<script src="https://cdn.leafletjs.com/leaflet/v1.7.1/leaflet.js"></script>
+<script>
+    const map = L.map('map').setView([51.505, -0.09], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    {% for denuncia in denuncias %}
+        L.marker([{{ denuncia.latitud }}, {{ denuncia.longitud }}])
+            .addTo(map)
+            .bindPopup('<strong>Categoría:</strong> {{ denuncia.categoria }}<br><strong>Estado:</strong> {{ denuncia.estado }}');
+    {% endfor %}
+</script>
+{% endblock %}
+{% endblock %}

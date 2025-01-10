@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mis Denuncias{% endblock %}
+
+{% block body %}
+<div class="container mx-auto mt-10 shadow-md bg-white p-6 rounded-lg">
+    <h1 class="text-2xl font-bold text-center">Mis Denuncias</h1>
+    <table class="w-full mt-6 border-collapse border border-gray-300">
+        <thead>
+            <tr class="bg-gray-200">
+                <th class="border border-gray-300 px-4 py-2">Categoría</th>
+                <th class="border border-gray-300 px-4 py-2">Estado</th>
+                <th class="border border-gray-300 px-4 py-2">Fecha</th>
+                <th class="border border-gray-300 px-4 py-2">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for denuncia in denuncias %}
+                <tr>
+                    <td class="border border-gray-300 px-4 py-2">{{ denuncia.categoria }}</td>
+                    <td class="border border-gray-300 px-4 py-2">{{ denuncia.estado }}</td>
+                    <td class="border border-gray-300 px-4 py-2">{{ denuncia.fechaHora|date('d/m/Y H:i') }}</td>
+                    <td class="border border-gray-300 px-4 py-2 text-center">
+                        <a href="{{ path('denuncia_detalle', {id: denuncia.id}) }}" class="text-blue-500 hover:underline">Ver</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
