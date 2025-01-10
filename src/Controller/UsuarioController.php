@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 #[Route('/usuario')]
 class UsuarioController extends AbstractController
@@ -32,7 +33,6 @@ class UsuarioController extends AbstractController
             $entityManager->persist($usuario);
             $entityManager->flush();
 
-            // Enviar email de verificación (implementación futura)
             $this->addFlash('success', 'Usuario registrado correctamente. Revisa tu correo para verificar tu cuenta.');
 
             return $this->redirectToRoute('usuario_login');
@@ -44,16 +44,20 @@ class UsuarioController extends AbstractController
     }
 
     #[Route('/login', name: 'usuario_login', methods: ['GET', 'POST'])]
-    public function login(): Response
+    public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        // Symfony gestiona automáticamente el login con su sistema de seguridad
-        return $this->render('usuario/login.html.twig');
+        $error = $authenticationUtils->getLastAuthenticationError();
+        $lastUsername = $authenticationUtils->getLastUsername();
+
+        return $this->render('usuario/login.html.twig', [
+            'last_username' => $lastUsername,
+            'error' => $error,
+        ]);
     }
 
     #[Route('/logout', name: 'usuario_logout', methods: ['GET'])]
     public function logout(): void
     {
-        // Symfony gestiona automáticamente el logout con su sistema de seguridad
         throw new \Exception('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 
@@ -131,7 +135,6 @@ class UsuarioController extends AbstractController
     ): Response {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        // Asociar denuncias del usuario eliminado al "usuario genérico"
         $usuarioGenerico = $usuarioRepository->findOneBy(['email' => 'anonimo@domain.com']);
         foreach ($usuario->getDenuncias() as $denuncia) {
             $denuncia->setUsuario($usuarioGenerico);

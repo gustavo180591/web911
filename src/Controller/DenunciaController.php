@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Denuncia;
-use App\Entity\Evidencia;
 use App\Form\DenunciaType;
 use App\Repository\DenunciaRepository;
 use Doctrine\ORM\EntityManagerInterface;

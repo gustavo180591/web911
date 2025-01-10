@@ -16,7 +16,7 @@ class DashboardController extends AbstractController
         DenunciaRepository $denunciaRepository,
         ReporteEstadisticoRepository $reporteEstadisticoRepository
     ): Response {
-        // Métricas clave
+        // Obtén métricas clave
         $totalDenuncias = $denunciaRepository->count([]);
         $denunciasPorEstado = $denunciaRepository->getCountByEstado();
         $categoriasDenuncias = $denunciaRepository->getCountByCategoria();
