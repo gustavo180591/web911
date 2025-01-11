@@ -26,13 +26,25 @@ class DenunciaController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $usuario = $this->getUser();
-            if ($usuario) {
+            if ($usuario && !$form->get('anonima')->getData()) {
                 $denuncia->setUsuario($usuario);
+            } else {
+                $denuncia->setUsuario(null); // Denuncia anónima
             }
+
+            $denuncia->setNumeroCaso(uniqid('CASO-')); // Generar número de caso único
             $entityManager->persist($denuncia);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Denuncia creada correctamente.');
+            // Enviar confirmación de recepción
+            if ($usuario) {
+                $this->addFlash(
+                    'success',
+                    'Denuncia creada correctamente. Tu número de caso es: ' . $denuncia->getNumeroCaso()
+                );
+            } else {
+                $this->addFlash('success', 'Denuncia anónima creada correctamente.');
+            }
 
             return $this->redirectToRoute('denuncia_listar');
         }
@@ -91,8 +103,6 @@ class DenunciaController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager
     ): Response {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
         $form = $this->createForm(DenunciaType::class, $denuncia);
         $form->handleRequest($request);
 
@@ -133,16 +143,17 @@ class DenunciaController extends AbstractController
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         $denuncias = $denunciaRepository->findAll();
-        $csvContent = "ID,Categoría,Descripción,Estado,Prioridad\n";
+        $csvContent = "ID,Categoría,Descripción,Estado,Prioridad,Numero de Caso\n";
 
         foreach ($denuncias as $denuncia) {
             $csvContent .= sprintf(
-                "%d,%s,%s,%s,%s\n",
+                "%d,%s,%s,%s,%s,%s\n",
                 $denuncia->getId(),
                 $denuncia->getCategoria(),
                 $denuncia->getDescripcion(),
                 $denuncia->getEstado(),
-                $denuncia->getPrioridad()
+                $denuncia->getPrioridad(),
+                $denuncia->getNumeroCaso()
             );
         }
 
@@ -156,7 +167,6 @@ class DenunciaController extends AbstractController
     #[Route('/geolocalizacion', name: 'denuncia_geolocalizacion', methods: ['GET'])]
     public function geolocalizacion(): Response
     {
-        // Implementación futura con un mapa interactivo
         return $this->render('denuncia/denuncia_mapa.html.twig');
     }
 }

@@ -3,3 +3,110 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+
+# Rutas para autenticación
+auth_login:
+    path: /auth/login
+    controller: App\Controller\AuthController::login
+
+auth_logout:
+    path: /auth/logout
+    controller: App\Controller\AuthController::logout
+
+auth_forgot_password:
+    path: /auth/forgot-password
+    controller: App\Controller\AuthController::forgotPassword
+
+auth_reset_password:
+    path: /auth/reset-password/{token}
+    controller: App\Controller\AuthController::resetPassword
+
+auth_resend_verification:
+    path: /auth/resend-verification
+    controller: App\Controller\AuthController::resendVerification
+
+auth_verification:
+    path: /auth/verification/{token}
+    controller: App\Controller\AuthController::verifyAccount
+
+# Rutas para usuarios
+usuario_listar:
+    path: /usuario/listar
+    controller: App\Controller\UsuarioController::listar
+
+usuario_cambiar_rol:
+    path: /usuario/cambiar-rol/{id}
+    controller: App\Controller\UsuarioController::cambiarRol
+
+usuario_eliminar:
+    path: /usuario/eliminar/{id}
+    controller: App\Controller\UsuarioController::eliminar
+
+# Rutas para denuncias
+denuncia_crear:
+    path: /denuncia/crear
+    controller: App\Controller\DenunciaController::crear
+
+denuncia_listar:
+    path: /denuncia/listar
+    controller: App\Controller\DenunciaController::listar
+
+denuncia_listar_todas:
+    path: /denuncia/listar-todas
+    controller: App\Controller\DenunciaController::listarTodas
+
+denuncia_geolocalizacion:
+    path: /denuncia/geolocalizacion
+    controller: App\Controller\DenunciaController::geolocalizacion
+
+# Rutas para evidencias
+evidencia_subir:
+    path: /evidencia/subir/{id}
+    controller: App\Controller\EvidenciaController::subir
+
+evidencia_listar:
+    path: /evidencia/listar/{id}
+    controller: App\Controller\EvidenciaController::listar
+
+evidencia_descargar:
+    path: /evidencia/descargar/{id}
+    controller: App\Controller\EvidenciaController::descargar
+
+# Rutas para notificaciones
+notificacion_enviar:
+    path: /notificacion/enviar
+    controller: App\Controller\NotificacionController::enviar
+
+notificacion_listar:
+    path: /notificacion/listar
+    controller: App\Controller\NotificacionController::listar
+
+notificacion_historial:
+    path: /notificacion/historial
+    controller: App\Controller\NotificacionController::historial
+
+# Rutas para reportes
+reporte_estadistico_crear:
+    path: /reporte/crear
+    controller: App\Controller\ReporteEstadisticoController::crear
+
+reporte_estadistico_listar:
+    path: /reporte/listar
+    controller: App\Controller\ReporteEstadisticoController::listar
+
+reporte_estadistico_detalle:
+    path: /reporte/detalle/{id}
+    controller: App\Controller\ReporteEstadisticoController::detalle
+
+reporte_estadistico_exportar:
+    path: /reporte/exportar/{id}/{formato}
+    controller: App\Controller\ReporteEstadisticoController::exportar
+
+# Rutas para el dashboard
+dashboard_index:
+    path: /dashboard
+    controller: App\Controller\DashboardController::index
+
+dashboard_detalles_categoria:
+    path: /dashboard/detalles/{categoria}
+    controller: App\Controller\DashboardController::detallesPorCategoria

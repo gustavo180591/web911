@@ -28,6 +28,11 @@ security:
             logout:
                 path: auth_logout
                 target: auth_login
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 2592000 # 30 días
+                path: /
+            secure: true # Obliga a que el acceso sea mediante HTTPS
 
     # Control de acceso
     access_control:
@@ -40,6 +45,9 @@ security:
         - { path: ^/denuncia/listar-todas, roles: ROLE_ADMIN }
         - { path: ^/notificacion, roles: ROLE_USER }
         - { path: ^/evidencia, roles: ROLE_USER }
+        - { path: ^/moderador, roles: ROLE_MODERATOR }
+        - { path: ^/supervisor, roles: ROLE_SUPERVISOR }
+        - { path: ^/, roles: IS_AUTHENTICATED_FULLY, requires_channel: https }
 
 when@test:
     security:

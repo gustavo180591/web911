@@ -22,19 +22,19 @@ class NotificacionController extends AbstractController
     ): Response {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        $usuarioId = $request->request->get('usuario_id');
+        $usuarioId = $request->request->get('usuario');
         $mensaje = $request->request->get('mensaje');
         $tipo = $request->request->get('tipo');
 
         if (!$usuarioId || !$mensaje || !$tipo) {
             $this->addFlash('error', 'Todos los campos son obligatorios.');
-            return $this->redirectToRoute('notificacion_listar');
+            return $this->redirectToRoute('notificacion_enviar');
         }
 
         $usuario = $entityManager->getRepository(Usuario::class)->find($usuarioId);
         if (!$usuario) {
             $this->addFlash('error', 'Usuario no encontrado.');
-            return $this->redirectToRoute('notificacion_listar');
+            return $this->redirectToRoute('notificacion_enviar');
         }
 
         $notificacion = new Notificacion();
@@ -70,6 +70,26 @@ class NotificacionController extends AbstractController
         );
 
         return $this->render('notificacion/notificacion_listar.html.twig', [
+            'notificaciones' => $paginacion,
+        ]);
+    }
+
+    #[Route('/historial', name: 'notificacion_historial', methods: ['GET'])]
+    public function historial(
+        NotificacionRepository $notificacionRepository,
+        PaginatorInterface $paginator,
+        Request $request
+    ): Response {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        $query = $notificacionRepository->findAllQuery();
+        $paginacion = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            10
+        );
+
+        return $this->render('notificacion/notificacion_historial.html.twig', [
             'notificaciones' => $paginacion,
         ]);
     }
@@ -114,35 +134,14 @@ class NotificacionController extends AbstractController
         EntityManagerInterface $entityManager
     ): Response {
         $usuario = $this->getUser();
-
         if (!$usuario) {
             throw $this->createAccessDeniedException('Acceso denegado.');
         }
 
         $preferencias = $request->request->get('preferencias', []);
-        // Implementar lógica para guardar preferencias en la base de datos
+        // Guardar preferencias en la base de datos (por implementar)
         $this->addFlash('success', 'Preferencias actualizadas correctamente.');
 
         return $this->redirectToRoute('notificacion_listar');
-    }
-
-    #[Route('/historial', name: 'notificacion_historial', methods: ['GET'])]
-    public function historial(
-        NotificacionRepository $notificacionRepository,
-        PaginatorInterface $paginator,
-        Request $request
-    ): Response {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
-        $query = $notificacionRepository->findAllQuery();
-        $paginacion = $paginator->paginate(
-            $query,
-            $request->query->getInt('page', 1),
-            10
-        );
-
-        return $this->render('notificacion/notificacion_historial.html.twig', [
-            'notificaciones' => $paginacion,
-        ]);
     }
 }

@@ -38,6 +38,16 @@ class EvidenciaController extends AbstractController
                 $nombreArchivo = uniqid() . '.' . $archivo->guessExtension();
                 $uploadDir = $this->getParameter('uploads_directory');
 
+                if (!in_array($archivo->getMimeType(), ['image/jpeg', 'image/png', 'video/mp4', 'audio/mpeg', 'application/pdf'])) {
+                    $this->addFlash('error', 'Tipo de archivo no permitido.');
+                    return $this->redirectToRoute('evidencia_subir', ['id' => $denuncia->getId()]);
+                }
+
+                if ($archivo->getSize() > 10 * 1024 * 1024) { // Limite de 10MB
+                    $this->addFlash('error', 'El archivo excede el tamaño máximo permitido de 10MB.');
+                    return $this->redirectToRoute('evidencia_subir', ['id' => $denuncia->getId()]);
+                }
+
                 try {
                     $archivo->move($uploadDir, $nombreArchivo);
                     $evidencia->setArchivo($nombreArchivo);

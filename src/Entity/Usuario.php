@@ -42,7 +42,7 @@ class Usuario
 
     #[ORM\Column(length: 50, options: ['default' => 'usuario'])]
     #[Assert\NotBlank(message: 'El rol no puede estar vacío.')]
-    #[Assert\Choice(choices: ['usuario', 'autoridad'], message: 'El rol debe ser "usuario" o "autoridad".')]
+    #[Assert\Choice(choices: ['usuario', 'autoridad', 'admin'], message: 'El rol debe ser "usuario", "autoridad" o "admin".')]
     private ?string $rol = 'usuario';
 
     #[ORM\Column(options: ['default' => false])]
@@ -78,6 +78,8 @@ class Usuario
     #[ORM\Column(type: 'string', nullable: true)]
     private ?string $resetToken = null;
 
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $emailVerified = false;
 
     public function getId(): ?int
     {
@@ -236,6 +238,18 @@ class Usuario
     public function setFechaRegistro(\DateTimeInterface $fecha_registro): static
     {
         $this->fecha_registro = $fecha_registro;
+
+        return $this;
+    }
+
+    public function isEmailVerified(): bool
+    {
+        return $this->emailVerified;
+    }
+
+    public function setEmailVerified(bool $emailVerified): static
+    {
+        $this->emailVerified = $emailVerified;
 
         return $this;
     }

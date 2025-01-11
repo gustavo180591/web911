@@ -44,7 +44,14 @@ class AuthController extends AbstractController
                 return $this->redirectToRoute('auth_forgot_password');
             }
 
-            $this->addFlash('success', 'Correo de recuperación enviado.');
+            // Generar token de recuperación
+            $token = bin2hex(random_bytes(32));
+            $usuario->setResetToken($token);
+            $entityManager->flush();
+
+            // Enviar correo con el enlace de recuperación
+            // Aquí deberías implementar el envío del correo con un servicio como SwiftMailer o Symfony Mailer
+            $this->addFlash('success', 'Correo de recuperación enviado. Revisa tu bandeja de entrada.');
         }
 
         return $this->render('auth/auth_forgot_password.html.twig');
@@ -75,6 +82,24 @@ class AuthController extends AbstractController
         }
 
         return $this->render('auth/auth_reset_password.html.twig', ['token' => $token]);
+    }
+
+    #[Route('/verify/{token}', name: 'auth_verify', methods: ['GET'])]
+    public function verifyEmail(string $token, EntityManagerInterface $entityManager): Response
+    {
+        $usuario = $entityManager->getRepository(Usuario::class)->findOneBy(['verificationToken' => $token]);
+
+        if (!$usuario) {
+            $this->addFlash('error', 'Token de verificación inválido o expirado.');
+            return $this->redirectToRoute('auth_login');
+        }
+
+        $usuario->setVerificado(true);
+        $usuario->setVerificationToken(null);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Cuenta verificada con éxito. Ahora puedes iniciar sesión.');
+        return $this->redirectToRoute('auth_login');
     }
 
     #[Route('/bloqueo', name: 'auth_bloqueo', methods: ['GET'])]

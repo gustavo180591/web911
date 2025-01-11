@@ -20,6 +20,7 @@ class DashboardController extends AbstractController
         $totalDenuncias = $denunciaRepository->count([]);
         $denunciasPorEstado = $denunciaRepository->getCountByEstado();
         $categoriasDenuncias = $denunciaRepository->getCountByCategoria();
+        $tendenciasMensuales = $denunciaRepository->getTendenciasMensuales();
 
         // Denuncias urgentes y sin autoridad
         $denunciasUrgentes = $denunciaRepository->findUrgentes();
@@ -35,6 +36,7 @@ class DashboardController extends AbstractController
             'denuncias_urgentes' => $denunciasUrgentes,
             'denuncias_sin_autoridad' => $denunciasSinAutoridad,
             'reportes' => $reportes,
+            'tendencias_mensuales' => $tendenciasMensuales,
         ]);
     }
 
@@ -44,10 +46,25 @@ class DashboardController extends AbstractController
         DenunciaRepository $denunciaRepository
     ): Response {
         $denuncias = $denunciaRepository->findByCategoria($categoria);
+        $tendenciasPorZona = $denunciaRepository->getTendenciasPorZona($categoria);
 
         return $this->render('dashboard/dashboard_detalles_categoria.html.twig', [
             'categoria' => $categoria,
             'denuncias' => $denuncias,
+            'tendencias_por_zona' => $tendenciasPorZona,
+        ]);
+    }
+
+    #[Route('/estadisticas', name: 'dashboard_estadisticas', methods: ['GET'])]
+    public function estadisticas(
+        DenunciaRepository $denunciaRepository
+    ): Response {
+        $denunciasPorFecha = $denunciaRepository->getDenunciasPorFecha();
+        $denunciasPorUbicacion = $denunciaRepository->getDenunciasPorUbicacion();
+
+        return $this->render('dashboard/dashboard_estadisticas.html.twig', [
+            'denuncias_por_fecha' => $denunciasPorFecha,
+            'denuncias_por_ubicacion' => $denunciasPorUbicacion,
         ]);
     }
 }

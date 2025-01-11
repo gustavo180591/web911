@@ -102,6 +102,20 @@ class ReporteEstadisticoController extends AbstractController
         ]);
     }
 
+    #[Route('/filtrar', name: 'reporte_estadistico_filtrar', methods: ['GET', 'POST'])]
+    public function filtrar(
+        Request $request,
+        DenunciaRepository $denunciaRepository
+    ): Response {
+        $filtros = $request->query->all();
+        $denunciasFiltradas = $denunciaRepository->findByFilters($filtros);
+
+        return $this->render('reporte/reporte_estadistico_filtrar.html.twig', [
+            'denuncias' => $denunciasFiltradas,
+            'filtros' => $filtros,
+        ]);
+    }
+
     private function generateMetrics(array $denuncias): array
     {
         $metrics = [

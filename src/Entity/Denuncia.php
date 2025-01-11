@@ -70,8 +70,6 @@ class Denuncia
         $this->autoridades = new ArrayCollection();
     }
 
-    // Getters y setters para cada propiedad
-
     public function getId(): ?int
     {
         return $this->id;

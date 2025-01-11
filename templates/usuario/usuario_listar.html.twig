@@ -11,6 +11,7 @@
                 <th class="border border-gray-300 px-4 py-2">Nombre</th>
                 <th class="border border-gray-300 px-4 py-2">Email</th>
                 <th class="border border-gray-300 px-4 py-2">Rol</th>
+                <th class="border border-gray-300 px-4 py-2">Estado</th>
                 <th class="border border-gray-300 px-4 py-2">Acciones</th>
             </tr>
         </thead>
@@ -21,9 +22,26 @@
                     <td class="border border-gray-300 px-4 py-2">{{ usuario.email }}</td>
                     <td class="border border-gray-300 px-4 py-2">{{ usuario.rol }}</td>
                     <td class="border border-gray-300 px-4 py-2 text-center">
+                        {% if usuario.verificado %}
+                            <span class="text-green-600 font-semibold">Activo</span>
+                        {% else %}
+                            <span class="text-red-600 font-semibold">Inactivo</span>
+                        {% endif %}
+                    </td>
+                    <td class="border border-gray-300 px-4 py-2 text-center">
                         <a href="{{ path('usuario_cambiar_rol', {id: usuario.id}) }}" class="text-blue-500 hover:underline">Cambiar Rol</a> |
+                        {% if usuario.verificado %}
+                            <a href="{{ path('usuario_desactivar', {id: usuario.id}) }}" class="text-orange-500 hover:underline">Desactivar</a>
+                        {% else %}
+                            <a href="{{ path('usuario_activar', {id: usuario.id}) }}" class="text-green-500 hover:underline">Activar</a>
+                        {% endif %}
+                        |
                         <a href="{{ path('usuario_eliminar', {id: usuario.id}) }}" class="text-red-500 hover:underline">Eliminar</a>
                     </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5" class="text-center text-gray-500 py-4">No hay usuarios registrados.</td>
                 </tr>
             {% endfor %}
         </tbody>

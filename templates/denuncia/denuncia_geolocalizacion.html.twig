@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Geolocalización de Denuncia{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="text-center text-primary mb-4">Geolocalización de Denuncia</h1>
+    <p class="text-center">Utiliza el mapa para seleccionar la ubicación exacta del incidente.</p>
+
+    <div id="map" class="mt-4" style="height: 500px; border: 1px solid #ddd;"></div>
+
+    <form method="post" action="{{ path('denuncia_guardar_ubicacion') }}" class="mt-4">
+        <input type="hidden" id="latitude" name="latitude">
+        <input type="hidden" id="longitude" name="longitude">
+        <button type="submit" class="btn btn-success w-100">Guardar Ubicación</button>
+    </form>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-oY3jtGpHLv5aLSnQysjvSTwVRqmf2vd3lc32eLU6lWU=" crossorigin=""></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Inicializar el mapa
+        const map = L.map('map').setView([{{ default_latitude|default:-27.3668 }}, {{ default_longitude|default:-55.8977 }}], 13);
+
+        // Añadir capa de mapas
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Marcador
+        let marker = L.marker([{{ default_latitude|default:-27.3668 }}, {{ default_longitude|default:-55.8977 }}], {
+            draggable: true
+        }).addTo(map);
+
+        // Actualizar coordenadas al mover el marcador
+        marker.on('moveend', (event) => {
+            const { lat, lng } = event.target.getLatLng();
+            document.getElementById('latitude').value = lat;
+            document.getElementById('longitude').value = lng;
+        });
+
+        // Ajustar coordenadas iniciales si son proporcionadas
+        {% if latitude is defined and longitude is defined %}
+            marker.setLatLng([{{ latitude }}, {{ longitude }}]);
+            map.setView([{{ latitude }}, {{ longitude }}], 13);
+            document.getElementById('latitude').value = {{ latitude }};
+            document.getElementById('longitude').value = {{ longitude }};
+        {% endif %}
+    });
+</script>

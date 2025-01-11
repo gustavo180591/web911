@@ -12,19 +12,43 @@
     </div>
     {% endif %}
     
-    <form method="post" action="{{ path('auth_login') }}" class="w-50 mx-auto">
+    <form method="post" action="{{ path('auth_login') }}" class="w-50 mx-auto" aria-labelledby="loginForm">
         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
         
         <div class="mb-3">
             <label for="email" class="form-label">Correo Electrónico</label>
-            <input type="email" name="email" id="email" class="form-control" placeholder="Ingresa tu correo" required value="{{ last_username }}" aria-label="Correo Electrónico">
+            <input 
+                type="email" 
+                name="email" 
+                id="email" 
+                class="form-control" 
+                placeholder="Ingresa tu correo" 
+                required 
+                value="{{ last_username }}" 
+                aria-label="Correo Electrónico">
         </div>
         
         <div class="mb-3">
             <label for="password" class="form-label">Contraseña</label>
-            <input type="password" name="password" id="password" class="form-control" placeholder="Ingresa tu contraseña" required aria-label="Contraseña">
+            <input 
+                type="password" 
+                name="password" 
+                id="password" 
+                class="form-control" 
+                placeholder="Ingresa tu contraseña" 
+                required 
+                aria-label="Contraseña">
         </div>
         
+        <div class="form-check mb-3">
+            <input 
+                type="checkbox" 
+                class="form-check-input" 
+                id="rememberMe" 
+                name="_remember_me">
+            <label class="form-check-label" for="rememberMe">Recordar sesión</label>
+        </div>
+
         <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
     </form>
 
