@@ -1,0 +1,68 @@
+{# templates/landing.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Bienvenido al Sistema{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="text-center mb-4">
+        <h1>Bienvenido al Sistema de Gestión</h1>
+        <p class="lead">Gestiona usuarios, denuncias, evidencias, reportes y más.</p>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Usuarios</h5>
+                    <p class="card-text">Registra, gestiona y actualiza perfiles de usuario.</p>
+                    <a href="{{ path('usuario_listado') }}" class="btn btn-primary">Ir a Usuarios</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Denuncias</h5>
+                    <p class="card-text">Crea y visualiza denuncias. Gestiona su estado y evidencias.</p>
+                    <a href="{{ path('denuncia_listar') }}" class="btn btn-primary">Ir a Denuncias</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Notificaciones</h5>
+                    <p class="card-text">Envía y gestiona notificaciones a los usuarios.</p>
+                    <a href="{{ path('notificacion_listar') }}" class="btn btn-primary">Ir a Notificaciones</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Autoridades</h5>
+                    <p class="card-text">Gestiona autoridades responsables de las denuncias.</p>
+                    <a href="{{ path('autoridad_listar') }}" class="btn btn-primary">Ir a Autoridades</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Reportes Estadísticos</h5>
+                    <p class="card-text">Genera reportes basados en métricas clave.</p>
+                    <a href="{{ path('reporte_estadistico_listar') }}" class="btn btn-primary">Ir a Reportes</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
