@@ -10,7 +10,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 #[Route('/usuario')]
@@ -19,7 +18,6 @@ class UsuarioController extends AbstractController
     #[Route('/registro', name: 'usuario_registro', methods: ['GET', 'POST'])]
     public function registro(
         Request $request,
-        UserPasswordEncoderInterface $passwordEncoder,
         EntityManagerInterface $entityManager
     ): Response {
         $usuario = new Usuario();
@@ -27,19 +25,33 @@ class UsuarioController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $usuario->setPassword($passwordEncoder->encodePassword($usuario, $usuario->getPassword()));
-            $usuario->setRol('usuario');
+            $usuario->setPassword(
+                password_hash($usuario->getPassword(), PASSWORD_BCRYPT)
+            );
+            $usuario->setRol('ROLE_USER');
             $usuario->setVerificado(false);
             $entityManager->persist($usuario);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Usuario registrado correctamente. Revisa tu correo para verificar tu cuenta.');
+            $this->addFlash('success', 'Usuario registrado correctamente.');
 
             return $this->redirectToRoute('usuario_login');
         }
 
         return $this->render('usuario/usuario_registro.html.twig', [
             'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/listar', name: 'usuario_listar', methods: ['GET'])]
+    public function listar(UsuarioRepository $usuarioRepository): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        $usuarios = $usuarioRepository->findAll();
+
+        return $this->render('usuario/usuario_listar.html.twig', [
+            'usuarios' => $usuarios,
         ]);
     }
 
@@ -58,14 +70,12 @@ class UsuarioController extends AbstractController
     #[Route('/logout', name: 'usuario_logout', methods: ['GET'])]
     public function logout(): void
     {
-        throw new \Exception('This method can be blank - it will be intercepted by the logout key on your firewall.');
+        throw new \LogicException('Este método es interceptado por el sistema de seguridad.');
     }
 
     #[Route('/perfil', name: 'usuario_perfil', methods: ['GET', 'POST'])]
-    public function perfil(
-        Request $request,
-        EntityManagerInterface $entityManager
-    ): Response {
+    public function perfil(Request $request, EntityManagerInterface $entityManager): Response
+    {
         $usuario = $this->getUser();
 
         if (!$usuario) {
@@ -87,21 +97,9 @@ class UsuarioController extends AbstractController
         ]);
     }
 
-    #[Route('/listado', name: 'usuario_listado', methods: ['GET'])]
-    public function listado(UsuarioRepository $usuarioRepository): Response
-    {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
-        return $this->render('usuario/usuario_listar.html.twig', [
-            'usuarios' => $usuarioRepository->findAll(),
-        ]);
-    }
-
     #[Route('/activar/{id}', name: 'usuario_activar', methods: ['POST'])]
-    public function activar(
-        Usuario $usuario,
-        EntityManagerInterface $entityManager
-    ): Response {
+    public function activar(Usuario $usuario, EntityManagerInterface $entityManager): Response
+    {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         $usuario->setVerificado(true);
@@ -109,14 +107,12 @@ class UsuarioController extends AbstractController
 
         $this->addFlash('success', 'Usuario activado correctamente.');
 
-        return $this->redirectToRoute('usuario_listado');
+        return $this->redirectToRoute('usuario_listar');
     }
 
     #[Route('/desactivar/{id}', name: 'usuario_desactivar', methods: ['POST'])]
-    public function desactivar(
-        Usuario $usuario,
-        EntityManagerInterface $entityManager
-    ): Response {
+    public function desactivar(Usuario $usuario, EntityManagerInterface $entityManager): Response
+    {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         $usuario->setVerificado(false);
@@ -124,7 +120,7 @@ class UsuarioController extends AbstractController
 
         $this->addFlash('success', 'Usuario desactivado correctamente.');
 
-        return $this->redirectToRoute('usuario_listado');
+        return $this->redirectToRoute('usuario_listar');
     }
 
     #[Route('/eliminar/{id}', name: 'usuario_eliminar', methods: ['POST'])]
@@ -136,6 +132,7 @@ class UsuarioController extends AbstractController
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         $usuarioGenerico = $usuarioRepository->findOneBy(['email' => 'anonimo@domain.com']);
+
         foreach ($usuario->getDenuncias() as $denuncia) {
             $denuncia->setUsuario($usuarioGenerico);
         }
@@ -145,6 +142,6 @@ class UsuarioController extends AbstractController
 
         $this->addFlash('success', 'Usuario eliminado correctamente.');
 
-        return $this->redirectToRoute('usuario_listado');
+        return $this->redirectToRoute('usuario_listar');
     }
 }

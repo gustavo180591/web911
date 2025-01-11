@@ -1,72 +1,35 @@
-{# templates/landing.html.twig #}
-
 {% extends 'base.html.twig' %}
 
-{% block title %}Bienvenido al Sistema{% endblock %}
+{% block title %}Sistema 911{% endblock %}
 
 {% block body %}
-<div class="container mt-5">
-    <div class="text-center mb-4">
-        <h1>Bienvenido al Sistema de Denuncias de Posadas</h1>
-        <p class="lead">Gestiona usuarios, denuncias, evidencias, reportes y más.</p>
-    </div>
-
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Usuarios</h5>
-                    <p class="card-text">Registra, gestiona y actualiza perfiles de usuario.</p>
-                    <a href="{{ path('usuario_listado') }}" class="btn btn-primary">Ir a Usuarios</a>
-                </div>
-            </div>
+<div class="min-h-screen flex items-center justify-center bg-gray-100">
+    <div class="max-w-4xl w-full bg-white shadow-md rounded-lg p-8 flex flex-col md:flex-row">
+        <div class="md:w-2/3 flex flex-col items-start justify-center">
+            <h1 class="text-5xl font-bold text-purple-600 mb-4">Sistema 911</h1>
+            <p class="text-gray-700 text-lg">
+                Bienvenido al Sistema 911: Un portal diseñado para reportar y gestionar emergencias de manera rápida y segura, conectándote directamente con las autoridades. ¡Tu seguridad es nuestra prioridad!
+            </p>
         </div>
-
-        <div class="col-md-4">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Denuncias</h5>
-                    <p class="card-text">Crea y visualiza denuncias. Gestiona su estado y evidencias.</p>
-                    <a href="{{ path('denuncia_listar') }}" class="btn btn-primary">Ir a Denuncias</a>
+        <div class="md:w-1/3 mt-8 md:mt-0">
+            <form method="POST" action="{{ path('usuario_login') }}" class="bg-gray-50 p-6 rounded-lg shadow-md">
+                <div class="mb-4">
+                    <label for="email" class="block text-gray-700">Correo electrónico o número de teléfono</label>
+                    <input type="text" id="email" name="email" class="w-full mt-1 p-2 border rounded-md" required>
                 </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Notificaciones</h5>
-                    <p class="card-text">Envía y gestiona notificaciones a los usuarios.</p>
-                    <a href="{{ path('notificacion_listar') }}" class="btn btn-primary">Ir a Notificaciones</a>
+                <div class="mb-4">
+                    <label for="password" class="block text-gray-700">Contraseña</label>
+                    <input type="password" id="password" name="password" class="w-full mt-1 p-2 border rounded-md" required>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row mt-4">
-        <div class="col-md-6">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Autoridades</h5>
-                    <p class="card-text">Gestiona autoridades responsables de las denuncias.</p>
-                    <a href="{{ path('autoridad_listar') }}" class="btn btn-primary">Ir a Autoridades</a>
+                <button type="submit" class="w-full bg-purple-600 text-white py-2 rounded-md">Iniciar sesión</button>
+                <div class="text-center mt-4">
+                    <a href="{{ path('auth_forgot_password') }}" class="text-purple-600 hover:underline">¿Olvidaste tu contraseña?</a>
                 </div>
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Reportes Estadísticos</h5>
-                    <p class="card-text">Genera reportes basados en métricas clave.</p>
-                    <a href="{{ path('reporte_estadistico_listar') }}" class="btn btn-primary">Ir a Reportes</a>
+                <div class="text-center mt-4">
+                    <a href="{{ path('usuario_registro') }}" class="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600">Crear cuenta nueva</a>
                 </div>
-            </div>
+            </form>
         </div>
-    </div>
-
-    <div class="text-center mt-5">
-        <p class="text-muted">Sistema de Denuncias para Usuarios de Barrios de la Ciudad de Posadas</p>
     </div>
 </div>
 {% endblock %}

@@ -29,7 +29,7 @@ class AuthController extends AbstractController
     #[Route('/logout', name: 'auth_logout', methods: ['GET'])]
     public function logout(): void
     {
-        throw new \LogicException('This method will be intercepted by the logout key on your firewall.');
+        throw new \LogicException('Este método será interceptado por el firewall de Symfony.');
     }
 
     #[Route('/forgot-password', name: 'auth_forgot_password', methods: ['GET', 'POST'])]
@@ -49,8 +49,7 @@ class AuthController extends AbstractController
             $usuario->setResetToken($token);
             $entityManager->flush();
 
-            // Enviar correo con el enlace de recuperación
-            // Aquí deberías implementar el envío del correo con un servicio como SwiftMailer o Symfony Mailer
+            // Aquí deberías implementar el envío del correo con Symfony Mailer o similar
             $this->addFlash('success', 'Correo de recuperación enviado. Revisa tu bandeja de entrada.');
         }
 
@@ -72,7 +71,7 @@ class AuthController extends AbstractController
         }
 
         if ($request->isMethod('POST')) {
-            $newPassword = $request->request->get('password');
+            $newPassword = $request->request->get('new_password');
             $usuario->setPassword($passwordHasher->hashPassword($usuario, $newPassword));
             $usuario->setResetToken(null);
             $entityManager->flush();
@@ -84,13 +83,37 @@ class AuthController extends AbstractController
         return $this->render('auth/auth_reset_password.html.twig', ['token' => $token]);
     }
 
-    #[Route('/verify/{token}', name: 'auth_verify', methods: ['GET'])]
-    public function verifyEmail(string $token, EntityManagerInterface $entityManager): Response
+    #[Route('/resend-verification', name: 'auth_resend_verification', methods: ['GET', 'POST'])]
+    public function resendVerification(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        if ($request->isMethod('POST')) {
+            $email = $request->request->get('email');
+            $usuario = $entityManager->getRepository(Usuario::class)->findOneBy(['email' => $email]);
+
+            if (!$usuario || $usuario->isVerificado()) {
+                $this->addFlash('error', 'Usuario no encontrado o ya verificado.');
+                return $this->redirectToRoute('auth_resend_verification');
+            }
+
+            // Generar nuevo token de verificación
+            $token = bin2hex(random_bytes(32));
+            $usuario->setVerificationToken($token);
+            $entityManager->flush();
+
+            // Aquí deberías implementar el envío del correo con Symfony Mailer o similar
+            $this->addFlash('success', 'Correo de verificación reenviado. Revisa tu bandeja de entrada.');
+        }
+
+        return $this->render('auth/auth_resend_verification.html.twig');
+    }
+
+    #[Route('/verification/{token}', name: 'auth_verification', methods: ['GET'])]
+    public function verifyAccount(string $token, EntityManagerInterface $entityManager): Response
     {
         $usuario = $entityManager->getRepository(Usuario::class)->findOneBy(['verificationToken' => $token]);
 
         if (!$usuario) {
-            $this->addFlash('error', 'Token de verificación inválido o expirado.');
+            $this->addFlash('error', 'Token inválido o expirado.');
             return $this->redirectToRoute('auth_login');
         }
 

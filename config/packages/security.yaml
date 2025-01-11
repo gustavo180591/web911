@@ -46,6 +46,7 @@ security:
         - { path: ^/evidencia, roles: ROLE_USER }
         - { path: ^/moderador, roles: ROLE_MODERATOR }
         - { path: ^/supervisor, roles: ROLE_SUPERVISOR }
+        - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:
     security:

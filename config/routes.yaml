@@ -8,7 +8,7 @@ controllers:
 landing:
     path: /
     controller: App\Controller\LandingController::index
-
+    
 # Rutas para autenticación
 auth_login:
     path: /auth/login
@@ -47,6 +47,10 @@ usuario_eliminar:
     path: /usuario/eliminar/{id}
     controller: App\Controller\UsuarioController::eliminar
 
+usuario_registro:
+    path: /usuario/registro
+    controller: App\Controller\UsuarioController::registro
+
 # Rutas para denuncias
 denuncia_crear:
     path: /denuncia/crear
@@ -59,6 +63,18 @@ denuncia_listar:
 denuncia_listar_todas:
     path: /denuncia/listar-todas
     controller: App\Controller\DenunciaController::listarTodas
+
+denuncia_actualizar:
+    path: /denuncia/actualizar/{id}
+    controller: App\Controller\DenunciaController::actualizar
+
+denuncia_cambiar_estado:
+    path: /denuncia/cambiar-estado/{id}
+    controller: App\Controller\DenunciaController::cambiarEstado
+
+denuncia_exportar:
+    path: /denuncia/exportar
+    controller: App\Controller\DenunciaController::exportar
 
 denuncia_geolocalizacion:
     path: /denuncia/geolocalizacion
@@ -77,6 +93,10 @@ evidencia_descargar:
     path: /evidencia/descargar/{id}
     controller: App\Controller\EvidenciaController::descargar
 
+evidencia_eliminar:
+    path: /evidencia/eliminar/{id}
+    controller: App\Controller\EvidenciaController::eliminar
+
 # Rutas para notificaciones
 notificacion_enviar:
     path: /notificacion/enviar
@@ -89,6 +109,18 @@ notificacion_listar:
 notificacion_historial:
     path: /notificacion/historial
     controller: App\Controller\NotificacionController::historial
+
+notificacion_marcar_leida:
+    path: /notificacion/marcar-leida/{id}
+    controller: App\Controller\NotificacionController::marcarLeida
+
+notificacion_marcar_no_leida:
+    path: /notificacion/marcar-no-leida/{id}
+    controller: App\Controller\NotificacionController::marcarNoLeida
+
+notificacion_preferencias:
+    path: /notificacion/preferencias
+    controller: App\Controller\NotificacionController::preferencias
 
 # Rutas para reportes
 reporte_estadistico_crear:
