@@ -32,7 +32,6 @@ security:
                 secret: '%kernel.secret%'
                 lifetime: 2592000 # 30 días
                 path: /
-            secure: true # Obliga a que el acceso sea mediante HTTPS
 
     # Control de acceso
     access_control:
