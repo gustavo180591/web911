@@ -4,6 +4,11 @@ controllers:
         namespace: App\Controller
     type: attribute
 
+# Rutas para la landing page
+landing:
+    path: /
+    controller: App\Controller\LandingController::index
+
 # Rutas para autenticación
 auth_login:
     path: /auth/login
