@@ -36,17 +36,18 @@ security:
     # Control de acceso
     access_control:
         - { path: ^/auth/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/auth/forgot-password, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/auth/forgot-password, roles: PUBLIC_ACCESS }
         - { path: ^/auth/reset-password, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/dashboard, roles: ROLE_ADMIN }
-        - { path: ^/usuario, roles: ROLE_ADMIN }
         - { path: ^/denuncia/listar, roles: ROLE_USER }
         - { path: ^/denuncia/listar-todas, roles: ROLE_ADMIN }
         - { path: ^/notificacion, roles: ROLE_USER }
         - { path: ^/evidencia, roles: ROLE_USER }
         - { path: ^/moderador, roles: ROLE_MODERATOR }
         - { path: ^/supervisor, roles: ROLE_SUPERVISOR }
-        - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/, roles: PUBLIC_ACCESS }
+        - { path: ^/usuario_registro, roles: PUBLIC_ACCESS }
+        - { path: ^/usuario_login, roles: PUBLIC_ACCESS }
 
 when@test:
     security:

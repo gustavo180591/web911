@@ -16,32 +16,28 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class UsuarioController extends AbstractController
 {
     #[Route('/registro', name: 'usuario_registro', methods: ['GET', 'POST'])]
-    public function registro(
-        Request $request,
-        EntityManagerInterface $entityManager
-    ): Response {
-        $usuario = new Usuario();
-        $form = $this->createForm(UsuarioType::class, $usuario);
-        $form->handleRequest($request);
+public function registro(Request $request, EntityManagerInterface $entityManager): Response
+{
+    $usuario = new Usuario();
+    $form = $this->createForm(UsuarioType::class, $usuario);
+    $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $usuario->setPassword(
-                password_hash($usuario->getPassword(), PASSWORD_BCRYPT)
-            );
-            $usuario->setRol('ROLE_USER');
-            $usuario->setVerificado(false);
-            $entityManager->persist($usuario);
-            $entityManager->flush();
+    if ($form->isSubmitted() && $form->isValid()) {
+        $usuario->setPassword(password_hash($usuario->getPassword(), PASSWORD_BCRYPT));
+        $usuario->setRol('ROLE_USER');
+        $usuario->setVerificado(false);
+        $entityManager->persist($usuario);
+        $entityManager->flush();
 
-            $this->addFlash('success', 'Usuario registrado correctamente.');
-
-            return $this->redirectToRoute('usuario_login');
-        }
-
-        return $this->render('usuario/usuario_registro.html.twig', [
-            'form' => $form->createView(),
-        ]);
+        // Agrega una redirección explícita
+        return $this->redirectToRoute('usuario_login');
     }
+
+    return $this->render('usuario/usuario_registro.html.twig', [
+        'form' => $form->createView(),
+    ]);
+}
+
 
     #[Route('/listar', name: 'usuario_listar', methods: ['GET'])]
     public function listar(UsuarioRepository $usuarioRepository): Response
@@ -143,5 +139,23 @@ class UsuarioController extends AbstractController
         $this->addFlash('success', 'Usuario eliminado correctamente.');
 
         return $this->redirectToRoute('usuario_listar');
+    }
+
+    #[Route('/verificar-email/{token}', name: 'usuario_verificar_email', methods: ['GET'])]
+    public function verificarEmail(string $token, UsuarioRepository $usuarioRepository, EntityManagerInterface $entityManager): Response
+    {
+        $usuario = $usuarioRepository->findOneBy(['verificationToken' => $token]);
+
+        if (!$usuario) {
+            $this->addFlash('error', 'Token de verificación inválido o expirado.');
+            return $this->redirectToRoute('usuario_login');
+        }
+
+        $usuario->setVerificado(true);
+        $usuario->setVerificationToken(null);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Cuenta verificada correctamente.');
+        return $this->redirectToRoute('usuario_login');
     }
 }

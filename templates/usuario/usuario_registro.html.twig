@@ -1,32 +1,109 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Registrar Usuario{% endblock %}
+{% block title %}Crea una cuenta{% endblock %}
 
 {% block body %}
-<div class="container mx-auto max-w-md mt-10 shadow-md bg-white p-6 rounded-lg">
-    <h1 class="text-2xl font-bold text-center">Registrar Usuario</h1>
-    <form method="post" class="mt-6 space-y-4">
-        <div>
-            <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre</label>
-            <input type="text" id="nombre" name="nombre" class="w-full px-4 py-2 border rounded-md" required>
+<div class="d-flex justify-content-center align-items-center vh-100 bg-light">
+    <div class="card shadow p-4" style="max-width: 700px; width: 100%;">
+        <div class="text-center mb-4">
+            <h1 class="display-4 fw-bold text-primary">Sistema 911</h1>
+            <h2 class="h5">Crea una cuenta</h2>
+            <p class="text-muted">Es rápido y fácil.</p>
         </div>
-        <div>
-            <label for="apellido" class="block text-sm font-medium text-gray-700">Apellido</label>
-            <input type="text" id="apellido" name="apellido" class="w-full px-4 py-2 border rounded-md" required>
+        <form method="post" action="{{ path('usuario_registro') }}" data-turbo="false" class="mt-6 space-y-4" enctype="multipart/form-data" id="registro-form">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Nombre" required>
+                </div>
+                <div class="col-md-6">
+                    <input type="text" id="apellido" name="apellido" class="form-control" placeholder="Apellido" required>
+                </div>
+                <div class="col-md-12">
+                    <label class="form-label">Fecha de nacimiento</label>
+                    <div class="d-flex gap-2">
+                        <select id="dia" name="dia" class="form-select" required>
+                            {% for dia in 1..31 %}
+                                <option value="{{ dia }}">{{ dia }}</option>
+                            {% endfor %}
+                        </select>
+                        <select id="mes" name="mes" class="form-select" required>
+                            {% set meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'] %}
+                            {% for i, mes in meses %}
+                                <option value="{{ i + 1 }}">{{ mes }}</option>
+                            {% endfor %}
+                        </select>
+                        <select id="anio" name="anio" class="form-select" required>
+                            {% for anio in 1900..'now'|date('Y') %}
+                                <option value="{{ anio }}">{{ anio }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <label class="form-label">Género</label>
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <input type="radio" id="genero_mujer" name="genero" value="femenino" required>
+                            <label for="genero_mujer">Mujer</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="genero_hombre" name="genero" value="masculino" required>
+                            <label for="genero_hombre">Hombre</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="genero_otro" name="genero" value="otro" required>
+                            <label for="genero_otro">Otro</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <input type="text" id="telefono" name="telefono" class="form-control" placeholder="Número de celular" required>
+                </div>
+                <div class="col-md-6">
+                    <input type="email" id="email" name="email" class="form-control" placeholder="Correo electrónico" required>
+                </div>
+                <div class="col-md-6">
+                    <input type="text" id="dni" name="dni" class="form-control" placeholder="DNI" required>
+                </div>
+                <div class="col-md-6">
+                    <input type="text" id="direccion" name="direccion" class="form-control" placeholder="Dirección" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="dni_frente" class="form-label">Frente del DNI</label>
+                    <input type="file" id="dni_frente" name="dni_frente" class="form-control" accept="image/*" required onchange="mostrarVistaPrevia(this, 'vista-dni-frente')">
+                    <img id="vista-dni-frente" class="img-thumbnail mt-2" style="display:none; max-height: 150px;">
+                </div>
+                <div class="col-md-6">
+                    <label for="dni_dorso" class="form-label">Dorso del DNI</label>
+                    <input type="file" id="dni_dorso" name="dni_dorso" class="form-control" accept="image/*" required onchange="mostrarVistaPrevia(this, 'vista-dni-dorso')">
+                    <img id="vista-dni-dorso" class="img-thumbnail mt-2" style="display:none; max-height: 150px;">
+                </div>
+                <div class="col-md-12">
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Contraseña nueva" required>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success w-100 mt-4">Registrarte</button>
+        </form>
+        <div class="text-center mt-3">
+            <a href="{{ path('usuario_login') }}" class="text-decoration-none">¿Ya tienes una cuenta?</a>
         </div>
-        <div>
-            <label for="email" class="block text-sm font-medium text-gray-700">Correo Electrónico</label>
-            <input type="email" id="email" name="email" class="w-full px-4 py-2 border rounded-md" required>
-        </div>
-        <div>
-            <label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
-            <input type="password" id="password" name="password" class="w-full px-4 py-2 border rounded-md" required>
-        </div>
-        <div>
-            <button type="submit" class="w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600">
-                Registrar
-            </button>
-        </div>
-    </form>
+    </div>
 </div>
+
+<script>
+    function mostrarVistaPrevia(input, idVista) {
+        const vistaPrevia = document.getElementById(idVista);
+        const archivo = input.files[0];
+        if (archivo) {
+            const lector = new FileReader();
+            lector.onload = function(e) {
+                vistaPrevia.src = e.target.result;
+                vistaPrevia.style.display = "block";
+            };
+            lector.readAsDataURL(archivo);
+        }
+    }
+</script>
 {% endblock %}
+
+
