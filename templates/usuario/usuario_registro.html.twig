@@ -1,109 +1,83 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Crea una cuenta{% endblock %}
+{% block title %}Registro{% endblock %}
 
 {% block body %}
-<div class="d-flex justify-content-center align-items-center vh-100 bg-light">
-    <div class="card shadow p-4" style="max-width: 700px; width: 100%;">
-        <div class="text-center mb-4">
-            <h1 class="display-4 fw-bold text-primary">Sistema 911</h1>
-            <h2 class="h5">Crea una cuenta</h2>
-            <p class="text-muted">Es rápido y fácil.</p>
-        </div>
-        <form method="post" action="{{ path('usuario_registro') }}" data-turbo="false" class="mt-6 space-y-4" enctype="multipart/form-data" id="registro-form">
-            <div class="row g-3">
-                <div class="col-md-6">
-                    <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Nombre" required>
-                </div>
-                <div class="col-md-6">
-                    <input type="text" id="apellido" name="apellido" class="form-control" placeholder="Apellido" required>
-                </div>
-                <div class="col-md-12">
-                    <label class="form-label">Fecha de nacimiento</label>
-                    <div class="d-flex gap-2">
-                        <select id="dia" name="dia" class="form-select" required>
-                            {% for dia in 1..31 %}
-                                <option value="{{ dia }}">{{ dia }}</option>
-                            {% endfor %}
-                        </select>
-                        <select id="mes" name="mes" class="form-select" required>
-                            {% set meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'] %}
-                            {% for i, mes in meses %}
-                                <option value="{{ i + 1 }}">{{ mes }}</option>
-                            {% endfor %}
-                        </select>
-                        <select id="anio" name="anio" class="form-select" required>
-                            {% for anio in 1900..'now'|date('Y') %}
-                                <option value="{{ anio }}">{{ anio }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-12">
-                    <label class="form-label">Género</label>
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <input type="radio" id="genero_mujer" name="genero" value="femenino" required>
-                            <label for="genero_mujer">Mujer</label>
-                        </div>
-                        <div>
-                            <input type="radio" id="genero_hombre" name="genero" value="masculino" required>
-                            <label for="genero_hombre">Hombre</label>
-                        </div>
-                        <div>
-                            <input type="radio" id="genero_otro" name="genero" value="otro" required>
-                            <label for="genero_otro">Otro</label>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <input type="text" id="telefono" name="telefono" class="form-control" placeholder="Número de celular" required>
-                </div>
-                <div class="col-md-6">
-                    <input type="email" id="email" name="email" class="form-control" placeholder="Correo electrónico" required>
-                </div>
-                <div class="col-md-6">
-                    <input type="text" id="dni" name="dni" class="form-control" placeholder="DNI" required>
-                </div>
-                <div class="col-md-6">
-                    <input type="text" id="direccion" name="direccion" class="form-control" placeholder="Dirección" required>
-                </div>
-                <div class="col-md-6">
-                    <label for="dni_frente" class="form-label">Frente del DNI</label>
-                    <input type="file" id="dni_frente" name="dni_frente" class="form-control" accept="image/*" required onchange="mostrarVistaPrevia(this, 'vista-dni-frente')">
-                    <img id="vista-dni-frente" class="img-thumbnail mt-2" style="display:none; max-height: 150px;">
-                </div>
-                <div class="col-md-6">
-                    <label for="dni_dorso" class="form-label">Dorso del DNI</label>
-                    <input type="file" id="dni_dorso" name="dni_dorso" class="form-control" accept="image/*" required onchange="mostrarVistaPrevia(this, 'vista-dni-dorso')">
-                    <img id="vista-dni-dorso" class="img-thumbnail mt-2" style="display:none; max-height: 150px;">
-                </div>
-                <div class="col-md-12">
-                    <input type="password" id="password" name="password" class="form-control" placeholder="Contraseña nueva" required>
+<div class="container vh-100 d-flex align-items-center justify-content-center">
+    <div class="row w-100">
+        <div class="col-12 col-lg-8 offset-lg-2">
+            <h2 class="text-center pt-5 mb-4">Registro</h2>
+            <p class="text-center text-muted mb-5">Complete los siguientes campos para crear su cuenta.</p>
+
+            {{ form_start(registroForm, { 'attr': {'class': 'row g-3'} }) }}
+            
+            <!-- Nombre y Apellido -->
+            <div class="col-md-6">
+                {{ form_label(registroForm.nombre) }}
+                {{ form_widget(registroForm.nombre, {'attr': {'class': 'form-control', 'placeholder': 'Ingrese su nombre'}}) }}
+            </div>
+            <div class="col-md-6">
+                {{ form_label(registroForm.apellido) }}
+                {{ form_widget(registroForm.apellido, {'attr': {'class': 'form-control', 'placeholder': 'Ingrese su apellido'}}) }}
+            </div>
+
+            <!-- Correo Electrónico y Teléfono -->
+            <div class="col-md-6">
+                {{ form_label(registroForm.email) }}
+                {{ form_widget(registroForm.email, {'attr': {'class': 'form-control', 'placeholder': 'Ingrese su correo electrónico'}}) }}
+            </div>
+            <div class="col-md-6">
+                {{ form_label(registroForm.telefono) }}
+                {{ form_widget(registroForm.telefono, {'attr': {'class': 'form-control', 'placeholder': 'Ingrese su número de teléfono'}}) }}
+            </div>
+
+            <!-- Dirección -->
+            <div class="col-12">
+                {{ form_label(registroForm.direccion) }}
+                {{ form_widget(registroForm.direccion, {'attr': {'class': 'form-control', 'placeholder': 'Ingrese su dirección'}}) }}
+            </div>
+
+            <!-- DNI y Género -->
+            <div class="col-md-6">
+                {{ form_label(registroForm.dni) }}
+                {{ form_widget(registroForm.dni, {'attr': {'class': 'form-control', 'placeholder': 'Ingrese su DNI'}}) }}
+            </div>
+            <div class="col-md-6">
+                {{ form_label(registroForm.genero) }}
+                {{ form_widget(registroForm.genero, {'attr': {'class': 'form-control'}}) }}
+            </div>
+
+            <!-- Archivos DNI -->
+            <div class="col-md-6">
+                {{ form_label(registroForm.dniFrente) }}
+                {{ form_widget(registroForm.dniFrente, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="col-md-6">
+                {{ form_label(registroForm.dniDorso) }}
+                {{ form_widget(registroForm.dniDorso, {'attr': {'class': 'form-control'}}) }}
+            </div>
+
+            <!-- Contraseña -->
+            <div class="col-12">
+                {{ form_label(registroForm.password) }}
+                {{ form_widget(registroForm.password, {'attr': {'class': 'form-control', 'placeholder': 'Ingrese su contraseña'}}) }}
+            </div>
+
+            <!-- Términos y condiciones -->
+            <div class="col-12">
+                <div class="form-check">
+                    {{ form_widget(registroForm.agreeTerms, {'attr': {'class': 'form-check-input'}}) }}
+                    {{ form_label(registroForm.agreeTerms, 'Acepto los términos y condiciones', {'label_attr': {'class': 'form-check-label'}}) }}
                 </div>
             </div>
-            <button type="submit" class="btn btn-success w-100 mt-4">Registrarte</button>
-        </form>
-        <div class="text-center mt-3">
-            <a href="{{ path('usuario_login') }}" class="text-decoration-none">¿Ya tienes una cuenta?</a>
+
+            <!-- Botón de registro -->
+            <div class="col-12 d-grid">
+                <button type="submit" class="btn btn-primary btn-lg">Registrarse</button>
+            </div>
+
+            {{ form_end(registroForm) }}
         </div>
     </div>
 </div>
-
-<script>
-    function mostrarVistaPrevia(input, idVista) {
-        const vistaPrevia = document.getElementById(idVista);
-        const archivo = input.files[0];
-        if (archivo) {
-            const lector = new FileReader();
-            lector.onload = function(e) {
-                vistaPrevia.src = e.target.result;
-                vistaPrevia.style.display = "block";
-            };
-            lector.readAsDataURL(archivo);
-        }
-    }
-</script>
 {% endblock %}
-
-

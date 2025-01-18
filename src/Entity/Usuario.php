@@ -81,6 +81,7 @@ class Usuario
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private bool $emailVerified = false;
 
+    // Getters and Setters
     public function getId(): ?int
     {
         return $this->id;
@@ -91,7 +92,7 @@ class Usuario
         return $this->nombre;
     }
 
-    public function setNombre(string $nombre): static
+    public function setNombre(string $nombre): self
     {
         $this->nombre = $nombre;
 
@@ -103,7 +104,7 @@ class Usuario
         return $this->apellido;
     }
 
-    public function setApellido(string $apellido): static
+    public function setApellido(string $apellido): self
     {
         $this->apellido = $apellido;
 
@@ -115,7 +116,7 @@ class Usuario
         return $this->email;
     }
 
-    public function setEmail(string $email): static
+    public function setEmail(string $email): self
     {
         $this->email = $email;
 
@@ -127,7 +128,7 @@ class Usuario
         return $this->telefono;
     }
 
-    public function setTelefono(string $telefono): static
+    public function setTelefono(string $telefono): self
     {
         $this->telefono = $telefono;
 
@@ -139,7 +140,7 @@ class Usuario
         return $this->direccion;
     }
 
-    public function setDireccion(?string $direccion): static
+    public function setDireccion(?string $direccion): self
     {
         $this->direccion = $direccion;
 
@@ -151,7 +152,7 @@ class Usuario
         return $this->password;
     }
 
-    public function setPassword(string $password): static
+    public function setPassword(string $password): self
     {
         $this->password = $password;
 
@@ -163,7 +164,7 @@ class Usuario
         return $this->rol;
     }
 
-    public function setRol(string $rol): static
+    public function setRol(string $rol): self
     {
         $this->rol = $rol;
 
@@ -175,7 +176,7 @@ class Usuario
         return $this->verificado;
     }
 
-    public function setVerificado(bool $verificado): static
+    public function setVerificado(bool $verificado): self
     {
         $this->verificado = $verificado;
 
@@ -187,7 +188,7 @@ class Usuario
         return $this->dni;
     }
 
-    public function setDni(string $dni): static
+    public function setDni(string $dni): self
     {
         $this->dni = $dni;
 
@@ -199,7 +200,7 @@ class Usuario
         return $this->dni_frente;
     }
 
-    public function setDniFrente(string $dni_frente): static
+    public function setDniFrente(string $dni_frente): self
     {
         $this->dni_frente = $dni_frente;
 
@@ -211,7 +212,7 @@ class Usuario
         return $this->dni_dorso;
     }
 
-    public function setDniDorso(string $dni_dorso): static
+    public function setDniDorso(string $dni_dorso): self
     {
         $this->dni_dorso = $dni_dorso;
 
@@ -223,7 +224,7 @@ class Usuario
         return $this->genero;
     }
 
-    public function setGenero(string $genero): static
+    public function setGenero(string $genero): self
     {
         $this->genero = $genero;
 
@@ -235,21 +236,33 @@ class Usuario
         return $this->fecha_registro;
     }
 
-    public function setFechaRegistro(\DateTimeInterface $fecha_registro): static
+    public function setFechaRegistro(\DateTimeInterface $fecha_registro): self
     {
         $this->fecha_registro = $fecha_registro;
 
         return $this;
     }
 
-    public function isEmailVerified(): bool
+    public function getFailedAttempts(): int
     {
-        return $this->emailVerified;
+        return $this->failedAttempts;
     }
 
-    public function setEmailVerified(bool $emailVerified): static
+    public function setFailedAttempts(int $failedAttempts): self
     {
-        $this->emailVerified = $emailVerified;
+        $this->failedAttempts = $failedAttempts;
+
+        return $this;
+    }
+
+    public function isLocked(): bool
+    {
+        return $this->locked;
+    }
+
+    public function setLocked(bool $locked): self
+    {
+        $this->locked = $locked;
 
         return $this;
     }
@@ -259,9 +272,22 @@ class Usuario
         return $this->resetToken;
     }
 
-    public function setResetToken(?string $resetToken): static
+    public function setResetToken(?string $resetToken): self
     {
         $this->resetToken = $resetToken;
+
+        return $this;
+    }
+
+    public function isEmailVerified(): bool
+    {
+        return $this->emailVerified;
+    }
+
+    public function setEmailVerified(bool $emailVerified): self
+    {
+        $this->emailVerified = $emailVerified;
+
         return $this;
     }
 }

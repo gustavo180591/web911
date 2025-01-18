@@ -2949,7 +2949,7 @@
                     "homepage": "https://symfony.com/contributors"
                 }
             ],
-            "description": "Registers environment variables from a .env file",
+            "description": "registros environment variables from a .env file",
             "homepage": "https://symfony.com",
             "keywords": [
                 "dotenv",
